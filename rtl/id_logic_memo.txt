@@ -1,0 +1,76 @@
+opcode:
+
+0110111: lui
+
+0010111: auipc
+
+1101111: jal
+1100111: jalr
+
+1100011: B format *6
+funct3:
+	000: beq
+	001: bne
+	100: blt
+	101: bge
+	110: bltU
+	111: bgeU
+
+0000011: I format *5 (load)
+funct3:
+	000: lb
+	001: lh
+	010: lw
+	100: lbU
+	101: lhU
+
+0100011: S format *3
+funct3: 
+	000: sb
+	001: sh
+	010: sw
+
+0010011: I format *9 (ALU immediate)
+funct3: 
+	000: addi
+	010: slti
+	011: sltiU
+	100: xori
+	110: ori
+	111: andi
+	001: slli
+	001: funct7:
+		0000000: srli
+		0100000: srai
+
+0010011: R format *10
+funct3:
+	000:funct7:
+		0000000: add
+		0100000: sub
+	001: sll
+	010: slt
+	011: sltU
+	100: xor
+	101: funct7:
+		0000000: srl
+		0100000: sra
+	110: or
+	111: and
+
+0001111: 
+funct3: 
+	000: fence
+	001: fence.i
+
+1110011: 
+funct3: 
+	000:inst[20]:
+		0: ecall
+		1: ebreak
+	001: csrrw
+	010: csrrs
+	011: csrrc
+	101: csrrwi
+	110: csrrsi
+	111: csrrci
