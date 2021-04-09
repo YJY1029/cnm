@@ -39,11 +39,11 @@ funct3:
 	110: ori
 	111: andi
 	001: slli
-	001: funct7:
+	101: funct7:
 		0000000: srli
 		0100000: srai
 
-0010011: R format *10
+0110011: R format *10
 funct3:
 	000:funct7:
 		0000000: add
