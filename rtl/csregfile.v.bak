@@ -12,8 +12,6 @@ module csregfile(
 	//csr from id
 	input wire csr_raddr, 
 	
-	//csr to executrol
-	output wire csr_
 	
 	//regfile from executrol
 	input wire reg_we, 
