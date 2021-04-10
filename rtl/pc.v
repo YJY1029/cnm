@@ -1,8 +1,8 @@
 `include "defines.v"
 
 module pc(
-	input wire clk, 
 	input wire rst, 
+	
 	input wire inst, 
 	
 	input wire jump, 

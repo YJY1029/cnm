@@ -98,18 +98,37 @@ module id(
 	wire fence = fence_fencei & (funct3 == `FENCE); 
 	wire fencei = fence_fencei & (funct3 == `FENCEI); 
 	
-	//Environment and CSRs
-	wire envir = envir_csr & (funct3 == `ENVIR);
-		wire ecall = envir & (funct7 == `ECALL); 
-		wire ebreak = envir & (funct7 == `EBREAK); 
+	//CSR
 	wire csrrw = envir_csr & (funct3 == `CSRRW);
 	wire csrrs = envir_csr & (funct3 == `CSRRS);
 	wire csrrc = envir_csr & (funct3 == `CSRRC);
 	wire csrrwi = envir_csr & (funct3 == `CSRRWI);
 	wire csrrsi = envir_csr & (funct3 == `CSRRSI);
-	wire csrrci = envir_csr & (funct3 == `CSRRCI);
+	wire csrrci = envir_csr & (funct3 == `CSRRCI); 
+	
+	//Environment
+	wire ecall = (inst == `ECALL); 
+	wire ebreak = (inst == `EBREAK); 
 	*/
 	
-	assign rs1_addr_o = (b_format | 
+	assign rd_addr_o = 
+		(lui | auipc | jal | jalr | il_format | i_format | r_format | csr) ? rd : 
+		`ZERO_REG; 
+	assign rs1_addr_o = 
+		(jalr | b_format | il_format | s_format | i_format | r_format | csrrw | csrrs | csrrc) ? rs1 : 
+		`ZERO_REG; 
+	assign rs2_addr_o = 
+		(b_format | s_format | r_format) ? rs2 : 
+		`ZERO_REG; 
+	assign imm_o = 
+		(i_format | il_format) ? {{20{inst[31]}}, inst[31:20]} : 
+		(s_format) ? {{20{inst[31]}}, inst[31:25], inst[11:7]} : 
+		(b_format) ? {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1b'0} :
+		jal ? {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0} : 
+		jalr ? {{20{inst[31]}}, inst[31:20]} : 
+		(lui | auipc) ? {inst[31:12], 12b'0} : 
+		32h'0; 
 	
+	assign rd_we_o = (i_format | il_format | r_format | jal | jalr | auipc | csrrw
+		
 endmodule

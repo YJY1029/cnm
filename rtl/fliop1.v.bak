@@ -21,8 +21,8 @@ module fliop1(
 			inst_r <= `NOP; 
 			inst_addr_r <= `INI_INST_ADDR; 
 		end else begin
-			inst_r <= inst; 
-			inst_addr_r <= inst_addr; 
+			inst_r <= inst_i; 
+			inst_addr_r <= inst_addr_i; 
 		end
 	end
 		
