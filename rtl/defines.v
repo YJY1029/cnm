@@ -7,12 +7,16 @@
 //Instruction parameters                
 `define INST_WIDTH		   31:0
 `define INST_ADDR_WIDTH  31:0
-`define INI_INST_ADDR   32'h0
+`define INI_INST_ADDR    32'h0
                              
-//General integer register           
-`define REG_WIDTH			   31:0
-`define REG_ADDR_WIDTH    4:0
+//General integer register       
+`define REG_NUM					 32    
+`define DATA_WIDTH			   31:0
+`define REG_ADDR_WIDTH   4:0
 `define ZERO_REG 			   5'h0
+
+//RAM 
+`define RAM_ADDR_WIDTH   31:0 //?
 
 //CSRs
 //others might be needed while some below might be useless

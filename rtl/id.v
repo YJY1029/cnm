@@ -20,7 +20,7 @@ module id(
 	output wire csr_we_o, 
 	output wire [`REG_ADDR_WIDTH] csr_o, 
 	output wire imm_en_o, 
-	output wire [`REG_WIDTH] imm_o, 
+	output wire [`DATA_WIDTH] imm_o, 
 	output wire un_signed_o 
 	);
 	

@@ -129,6 +129,6 @@ module id(
 		(lui | auipc) ? {inst[31:12], 12b'0} : 
 		32h'0; 
 	
-	assign rd_we_o = (i_format | il_format | r_format | jal | jalr | auipc | csrrw
+	
 		
 endmodule
