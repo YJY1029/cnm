@@ -9,8 +9,8 @@ module pc(
 	input wire [`INST_ADDR_WIDTH] jump_addr, 
 	input wire [1:0] hold, 
 	
-	output [`INST_ADDR_WIDTH] pc_o, 
-	output [`INST_WIDTH] inst_o
+	output wire [`INST_ADDR_WIDTH] pc_o, 
+	output wire [`INST_WIDTH] inst_o
 	);
 	
 	assign inst_o = inst;

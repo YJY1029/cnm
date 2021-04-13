@@ -12,14 +12,14 @@ module csregfile(
 	
 	//csr from executrol
 	input wire csr_we, 
-	input wire [`RAM_ADDR_WIDTH] csr_waddr, 
+	input wire [`CSR_ADDR_WIDTH] csr_waddr, 
 	input wire [`DATA_WIDTH] csr_wdata, 
 	
 	//csr from id
-	input wire [`RAM_ADDR_WIDTH] csr_raddr, 
+	input wire [`CSR_ADDR_WIDTH] csr_raddr, 
 	
 	//csr to executrol
-	output reg [`DATA_WIDTH] csr_rdata, 
+	output reg [`DATA_WIDTH] csr_rdata_o, 
 	
 	//regfile from executrol
 	input wire rd_we, 
@@ -31,8 +31,8 @@ module csregfile(
 	input wire [`REG_ADDR_WIDTH] rs2_raddr, 
 	
 	//regfile to executrol
-	output reg [`DATA_WIDTH] rs1_rdata, 
-	output reg [`DATA_WIDTH] rs2_rdata
+	output reg [`DATA_WIDTH] rs1_rdata_o, 
+	output reg [`DATA_WIDTH] rs2_rdata_o
 );
 	
 	reg [`DATA_WIDTH] regs[0:`REG_NUM-1];
@@ -56,61 +56,64 @@ module csregfile(
 	always @ (*) begin
 		//reading rs1
 		if (rs1_raddr == `ZERO_REG) begin
-			rs1_rdata = 32'h0; 
+			rs1_rdata_o = 32'h0; 
 		end else if (rs1_raddr == waddr && rd_we == `WRITE_ENABLE) begin
-			rs1_rdata = wdata; 
+			rs1_rdata_o = wdata; 
 		end else begin//do we need a read signal? or just leave it to ZERO_REG?
-			rs1_rdata = regs[rs1_raddr];
+			rs1_rdata_o = regs[rs1_raddr];
 		end
 		
 		//reading rs2
 		if (rs2_raddr == `ZERO_REG) begin
-			rs2_rdata = 32'h0; 
+			rs2_rdata_o = 32'h0; 
 		end else if (rs2_raddr == waddr && rd_we == `WRITE_ENABLE) begin
-			rs2_rdata = wdata; 
+			rs2_rdata_o = wdata; 
 		end else begin
-			rs2_rdata = regs[rs2_raddr];
+			rs2_rdata_o = regs[rs2_raddr];
 		end
 		
 		//reading csr
-		if ((csr_waddr[11:0] == csr_raddr[11:0]) && (csr_we == `WRITE_ENABLE)) begin
-			csr_rdata = csr_wdata; 
+		if ((csr_waddr == csr_raddr) && (csr_we == `WRITE_ENABLE)) begin
+			csr_rdata_o = csr_wdata; 
 		end else begin
-			case (csr_raddr[11:0]) 
+			case (csr_raddr) 
 				`mstatus: begin
-					csr_rdata = mstatus; 
+					csr_rdata_o = mstatus; 
 				end
 				`misa: begin
-					csr_rdata = misa; 
+					csr_rdata_o = misa; 
 				end
 				`mtvec: begin
-					csr_rdata = mtvec; 
+					csr_rdata_o = mtvec; 
 				end
 				`mscratch: begin
-					csr_rdata = mscratch; 
+					csr_rdata_o = mscratch; 
 				end
 				`mepc: begin
-					csr_rdata = mepc; 
+					csr_rdata_o = mepc; 
 				end
 				/*
 				`mcause: begin
-					csr_rdata = mcause; 
+					csr_rdata_o = mcause; 
 				end
 				`mtval: begin
-					csr_rdata = mtval; 
+					csr_rdata_o = mtval; 
 				end
 				`mip: begin
-					csr_rdata = mip; 
+					csr_rdata_o = mip; 
 				end
 				*/
 				`mcycle: begin
-					csr_rdata = cycle[31:0]; 
+					csr_rdata_o = cycle[31:0]; 
 				end
 				`mcycleh: begin
-					csr_rdata = cycle[63:32]; 
+					csr_rdata_o = cycle[63:32]; 
 				end
 				`mvendorid: begin
-					csr_rdata = mvendorid; 
+					csr_rdata_o = mvendorid; 
+				end
+				default: begin
+				
 				end
 			endcase
 		end	
@@ -140,7 +143,7 @@ module csregfile(
 				regs[waddr_i] <= wdata; 
 				
 			end else if (csr_we == `WRITE_ENABLE) begin
-				case (csr_waddr[11:0])
+				case (csr_waddr)
 					`mstatus: begin
 						mstatus <= csr_wdata; 
 					end
@@ -174,6 +177,9 @@ module csregfile(
 						cycle[63:32] <= csr_wdata; 
 					end
 					//mvendorid is readonly
+					default: begin
+						
+					end
 				endcase
 			end
 		end

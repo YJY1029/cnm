@@ -9,21 +9,37 @@ module id(
 	input wire [`INST_ADDR_WIDTH] inst_addr, 
 	
 	//to csregfile
-	output wire [`REG_ADDR_WIDTH] rs1_addr_o, 
-	output wire [`REG_ADDR_WIDTH] rs2_addr_o, 
-	output wire [`CSR_ADDR_WIDTH] csr_addr_o,
+	output wire [`REG_ADDR_WIDTH] rs1_raddr_o, 
+	output wire [`REG_ADDR_WIDTH] rs2_raddr_o, 
+	output wire [`CSR_ADDR_WIDTH] csr_raddr_o,
 	
 	//to executrol
 	output wire inst_addr_o, 
 	output wire rd_we_o, 
-	output wire [`REG_ADDR_WIDTH] rd_addr_o, 
+	output wire [`REG_ADDR_WIDTH] rd_waddr_o, 
 	output wire csr_we_o, 
-	output wire [`REG_ADDR_WIDTH] csr_o, 
-	output wire imm_en_o, 
+	output wire [`MEM_ADDR_WIDTH] csr_waddr_o, 
 	output wire [`DATA_WIDTH] imm_o, 
-	output wire un_signed_o 
+	output wire [?] alu_sel_o, 
+	output wire [4:0] shamt_o, 
+	output wire [?] op1_sel_o, 
+	output wire [?] op2_sel_o, 
+	output wire [1:0] mem_rw_o, 
+	output wire [?] b_sel_o, 
+	output wire [?] wb_sel
+	//output wire un_signed_o 
 	);
-	
+	/*
+	rd_we 2: enable, disable 
+	mem_rw 3: write, read, disable
+	wb_sel 3: reg, mem, pc, csr, ?
+	op1sel 2: rs1, inst_addr, imm, none
+	op2sel 3: rs2, 32h'4, imm, none
+	imm_en: none//should sign extension be left to executrol module? 
+	rsdata_signed 2: data signed, data unsigned 
+	alusel 9: add, sub, and, or, xor, logical shift left, logical shift right, arithmetic shift left, arithmetic shift right
+	branch_type ?: equal, less than, signed?
+	*/
 	//Instruction breakup
 	wire [6:0] opcode = inst[6:0]; 
 	wire [`REG_ADDR_WIDTH] rd = inst[11:7];
@@ -31,9 +47,6 @@ module id(
 	wire [`REG_ADDR_WIDTH] rs1 = inst[19:15];
 	wire [`REG_ADDR_WIDTH] rs2 = inst[24:20]; 
 	wire [6:0] funct7 = inst[31:25]; 
-	
-	assign inst_addr_o = inst_addr; 
-	
 	/*
 	//opcode
 	wire lui = (opcode == `LUI); 
@@ -46,7 +59,7 @@ module id(
 	wire i_format = (opcode == `I_FORMAT); 
 	wire r_format = (opcode == `R_FORMAT); 
 	wire fence_fencei = (opcode == `FENCE_FENCEI); 
-	wire envir_csr = (opcode == `ENVIR_CSR); 
+	wire csr = (opcode == `CSR); 
 	
 	//B format
 	wire beq = b_format & (funct3 == `BEQ); 
@@ -110,16 +123,34 @@ module id(
 	wire ecall = (inst == `ECALL); 
 	wire ebreak = (inst == `EBREAK); 
 	*/
-	
-	assign rd_addr_o = 
-		(lui | auipc | jal | jalr | il_format | i_format | r_format | csr) ? rd : 
-		`ZERO_REG; 
-	assign rs1_addr_o = 
+	//to csregfile
+	assign rs1_raddr_o = 
 		(jalr | b_format | il_format | s_format | i_format | r_format | csrrw | csrrs | csrrc) ? rs1 : 
 		`ZERO_REG; 
-	assign rs2_addr_o = 
+		
+	assign rs2_raddr_o = 
 		(b_format | s_format | r_format) ? rs2 : 
 		`ZERO_REG; 
+		
+	assign csr_raddr_o = inst[31:20]; 
+		
+	//to executrol
+	assign inst_addr_o = inst_addr; 
+	
+	assign rd_we_o = 
+		(lui | auipc | jal | jalr | il_format | i_format | r_format | csr) ? `WRITE_ENABLE : 
+		1'b0; 
+	
+	assign rd_waddr_o = 
+		(lui | auipc | jal | jalr | il_format | i_format | r_format | csr) ? rd : 
+		`ZERO_REG; 
+		
+	assign csr_we_o = 
+		csr ? `WRITE_ENABLE : 
+		1'b0; 
+		
+	assign csr_waddr_o = inst[31:20]; 
+				
 	assign imm_o = 
 		(i_format | il_format) ? {{20{inst[31]}}, inst[31:20]} : 
 		(s_format) ? {{20{inst[31]}}, inst[31:25], inst[11:7]} : 
@@ -128,17 +159,26 @@ module id(
 		jalr ? {{20{inst[31]}}, inst[31:20]} : 
 		(lui | auipc) ? {inst[31:12], 12b'0} : 
 		32h'0; 
+		
+	assign alu_sel = 
+		(auipc | jal | jalr | il_format | s_format | addi | add) ? `ALU_ADD : 
+		(b_format | slti | sltiu | slt | sltu | sub) ? `ALU_SUB : 
+		(xori | xorr) ? `ALU_XOR : 
+		(ori | orr) ? `ALU_OR : 
+		(andi | andd) ? `ALU_AND : 
+		(slli | sll) ? `ALU_SLL : 
+		(srli | srl) ? `ALU_SRL : 
+		(srai | sra) ? `ALU_SRA : 
+		`ALU_NOP; 
+		
+	assign shamt_o = rs2; 
+		
+	assign op1_sel_o = 
 	
-	/*
-	rd_we: enable, disable 
-	mem_rw: write, read, disable
-	wb_sel: ?
-	op1sel: rs1, none
-	op2sel: rs2, imm, none
-	imm_en: none//should sign extension be left to executrol module? 
-	rsdata_signed: data signed, data unsigned 
-	alusel: add, and, or, xor, logical shift left, logical shift right, arithmetic shift right
-	branch_type: equal, less than, signed?
-	*/
+	assign op2_sel_o = 
+	
+	assign mem_rw_o = 
+	
+	assign b_sel_o = 
 		
 endmodule

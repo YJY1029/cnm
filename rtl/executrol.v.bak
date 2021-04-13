@@ -10,7 +10,7 @@ module executrol(
 	input wire [`REG_ADDR_WIDTH] rd_waddr, 
 	input wire csr_we, 
 	input wire [`MEM_ADDR_WIDTH] csr_waddr, 
-	input wire [`DATA_WIDTH] imm, 
+	input 
 	input wire [?] alu_sel, 
 	input wire [?] op1_sel, 
 	input wire [?] op2_sel, 

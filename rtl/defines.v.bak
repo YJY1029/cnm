@@ -1,9 +1,22 @@
-//Flags
+`define DATA_WIDTH			   31:0
+
+//General flags
 `define RST              1'b0
 `define JUMP             1'b1
 `define HOLD             1'b1
 `define WRITE_ENABLE	   1'b1
-                             
+
+//ALU falgs
+`define ALU_ADD 
+`define ALU_SUB 
+`define ALU_XOR
+`define ALU_OR
+`define ALU_AND
+`define ALU_SLL 
+`define ALU_SRL 
+`define ALU_SRA 
+`define ALU_NOP
+
 //Instruction parameters                
 `define INST_WIDTH		   31:0
 `define INST_ADDR_WIDTH  31:0
@@ -11,16 +24,13 @@
                              
 //General integer register       
 `define REG_NUM					 32    
-`define REG_WIDTH			   31:0
 `define REG_ADDR_WIDTH   4:0
 `define ZERO_REG 			   5'h0
 
 //RAM 
 `define RAM_ADDR_WIDTH   31:0 //?
-`define RAM_WIDTH        31:0	
 
-//CSRs
-//others might be needed while some below might be useless
+//CSRs, others might be needed while some below might be useless
 `define CSR_ADDR_WIDTH 11:0
 
 `define mstatus    12'h300	//*very complex                                       
