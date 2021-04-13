@@ -129,6 +129,16 @@ module id(
 		(lui | auipc) ? {inst[31:12], 12b'0} : 
 		32h'0; 
 	
-	
+	/*
+	rd_we: enable, disable 
+	mem_rw: write, read, disable
+	wb_sel: ?
+	op1sel: rs1, none
+	op2sel: rs2, imm, none
+	imm_en: none//should sign extension be left to executrol module? 
+	rsdata_signed: data signed, data unsigned 
+	alusel: add, and, or, xor, logical shift left, logical shift right, arithmetic shift right
+	branch_type: equal, less than, signed?
+	*/
 		
 endmodule

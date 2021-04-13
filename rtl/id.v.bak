@@ -20,7 +20,7 @@ module id(
 	output wire csr_we_o, 
 	output wire [`REG_ADDR_WIDTH] csr_o, 
 	output wire imm_en_o, 
-	output wire [`REG_WIDTH] imm_o, 
+	output wire [`DATA_WIDTH] imm_o, 
 	output wire un_signed_o 
 	);
 	
@@ -129,6 +129,16 @@ module id(
 		(lui | auipc) ? {inst[31:12], 12b'0} : 
 		32h'0; 
 	
-	
+	/*
+	rd_we: enable, disable 
+	mem_rw: write, read, disable
+	wb_sel: ?
+	op1sel: rs1, none
+	op2sel: rs2, imm, none
+	imm_en: none//should sign extension be left to executrol module? 
+	rsdata_signed: data signed, data unsigned 
+	alusel: add, and, or, xor, logical shift left, logical shift right, arithmetic shift right
+	branch_type: equal, less than, signed?
+	*/
 		
 endmodule
