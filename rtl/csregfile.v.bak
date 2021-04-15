@@ -11,7 +11,6 @@ module csregfile(
 	input wire rst, 
 	
 	//csr from executrol
-	input wire csr_we, 
 	input wire [`CSR_ADDR_WIDTH] csr_waddr, 
 	input wire [`DATA_WIDTH] csr_wdata, 
 	
@@ -73,7 +72,7 @@ module csregfile(
 		end
 		
 		//reading csr
-		if ((csr_waddr == csr_raddr) && (csr_we == `WRITE_ENABLE)) begin
+		if ((csr_waddr == csr_raddr) && (csr_raddr != `mdisable)) begin
 			csr_rdata_o = csr_wdata; 
 		end else begin
 			case (csr_raddr) 
@@ -111,6 +110,9 @@ module csregfile(
 				end
 				`mvendorid: begin
 					csr_rdata_o = mvendorid; 
+				end
+				default: begin
+				
 				end
 			endcase
 		end	

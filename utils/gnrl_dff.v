@@ -5,8 +5,8 @@ module gnrl_dff # (
 	input rst, 
 	input hold, 
 	
+	input [DW-1:0] dis_val, 
 	input [DW-1:0] din, 
-	input [DW-1:0] rst_hold, 
 	output [DW-1:0] qout
 );
 	
@@ -14,7 +14,7 @@ module gnrl_dff # (
 	
 	always @ (posedge clk or negedge rst) begin
 		if (!rst | hold) begin 
-			qout_r <= rst_hold; 
+			qout_r <= dis_val; 
 		end else begin
 			qout_r <= din; 
 		end

@@ -5,16 +5,16 @@ module gnrl_dff # (
 	input rst, 
 	input hold, 
 	
+	input [DW-1:0] dis_val, 
 	input [DW-1:0] din, 
-	input [DW-1:0] rst_hold, 
 	output [DW-1:0] qout
 );
 	
 	reg [DW-1:0] qout_r; 
 	
-	always @ (posedge elk or negedge rst) begin
+	always @ (posedge clk or negedge rst) begin
 		if (!rst | hold) begin 
-			qout_r <= rst_hold; 
+			qout_r <= de_val; 
 		end else begin
 			qout_r <= din; 
 		end
