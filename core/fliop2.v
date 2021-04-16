@@ -42,7 +42,7 @@ module fliop2(
 	output wire [`DATA_WIDTH] rs2_rdata_o,
 	output wire [`DATA_WIDTH] csr_rdata_o
 	); 
-	/*gnrl_dff #(data width) name(clk, rst, hold, dis value, en input, output)
+	
 	wire [`INST_WIDTH] inst_r; 
 	gnrl_dff #(32) inst_dff(clk, rst, hold, `NOP, inst, inst_r); 
 	assign inst_o = inst_r; 
@@ -62,7 +62,7 @@ module fliop2(
 	wire [`DATA_WIDTH] imm_r; 
 	gnrl_dff #(32) imm_dff(clk, rst, hold, 32'h0, imm, imm_r); 
 	assign imm_o = imm_r; 
-	*/
+	
 	wire [`ALU_SEL] alu_sel_r; 
 	gnrl_dff #(4) alu_sel_dff(clk, rst, hold, `ALU_ADD, alu_sel, alu_sel_r); 
 	assign alu_sel_o = alu_sel_r; 

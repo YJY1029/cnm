@@ -1,8 +1,28 @@
 
 # Core of Normal Microarchitecture
+## Memo - 4/16
+imm本身传进executrol内当做一个输入，alu只是用来对op1和op2做操作的器件
+跳转地址如果不是alu的结果，就自己算自己的，自己带一个小型alu
+
+如何load？如何save？
+从mem_rw可以知道是load，此时根据byte_sel向总线发出信号，又根据alu_rslt得到地址，总线从mem取出数据，从总线取出数据
+（数据和请求的时序问题怎么解决？加延时？），然后按其他类型一般向rd写入
+从mem_rw可以知道是save，此时根据byte_sel取出寄存器中特定数据，alu_rslt是写入的地址，将数据与地址放入总线中即可，似乎不存在时序问题
+
+imm有较大问题，暂定所有有符号、无符号的问题全部交由id解决，故id中的imm_o需要大加修改
+
+R类型，基本没有问题，alu正常计算即可，需要解决shamt的问题（实际上仍是上述imm_o问题）
+I类型，同上，只是将rs2中数据换成了imm罢了
+S类型见上
+B类型，op1与op2的比较由alu完成，完成后放入jump_o，跳转地址由executrol另外一个部分进行计算（可能存在时序问题）
+U类型，auipc按照I类型的方法解决了，lui“可能”判定不到写回的数据，检查datapath，看看wb_sel有没有包括这一种情况
+J类型，名字有误，wb_sel里面好像把它叫成了u_type
+
+总之，思考认为imm_o，B类型（涉及jump_o与jump_addr）、L类型（涉及总线信号与以及内存）可能还有其他类型的时序，J类型的名字这三个方面很有可能存在问题
+现在似乎把wb_sel信号弄得太重要了，明天需要仔细思考wb_sel的意义
+
 This project is an RV32I core of normal, simple and classical microarchitecture. 
 This first version of design is very simple, focusing on simplicity and readability rather than performance, as it only has a three-stage pipeline, which is divided into instruction fetch, instruction decoding and execution. 
-
 ## Design Ideas
 
 When implementing this design, there are three main design ideas: 

@@ -45,7 +45,7 @@ module id(
 	wire [`REG_ADDR_WIDTH] rs1 = inst[19:15];
 	wire [`REG_ADDR_WIDTH] rs2 = inst[24:20]; 
 	wire [6:0] funct7 = inst[31:25]; 
-	/*
+	
 	//opcode
 	wire lui = (opcode == `LUI); 
 	wire auipc = (opcode == `AUIPC); 
@@ -120,7 +120,7 @@ module id(
 	//Environment
 	wire ecall = (inst == `ECALL); 
 	wire ebreak = (inst == `EBREAK); 
-	*/
+	
 	//to csregfile
 	assign rs1_raddr_o = 
 		(jalr | b_format | il_format | s_format | i_format | r_format | csrrw | csrrs | csrrc) ? rs1 : 

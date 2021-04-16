@@ -103,3 +103,4 @@ module fliop2(
 	gnrl_dff #(32) csr_rdata_dff(clk, rst, hold, 32h'0, csr_rdata, csr_rdata_r); 
 	assign csr_rdata_o = csr_rdata_r; 
 	
+endmodule

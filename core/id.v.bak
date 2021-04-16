@@ -17,7 +17,7 @@ module id(
 	output wire inst_o, 
 	output wire inst_addr_o, 
 	output wire [`REG_ADDR_WIDTH] rd_waddr_o, 
-	output wire [`MEM_ADDR_WIDTH] csr_waddr_o, 
+	output wire [`CSR_ADDR_WIDTH] csr_waddr_o, 
 	output wire [`DATA_WIDTH] imm_o, 
 	output wire [`ALU_SEL] alu_sel_o, 
 	output wire [`OP1_SEL] op1_sel_o, 
