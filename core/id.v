@@ -150,12 +150,13 @@ module id(
 		`mdisable; 
 				
 	assign imm_o = 
-		(i_format | il_format) ? {{20{inst[31]}}, inst[31:20]} : 
-		(s_format) ? {{20{inst[31]}}, inst[31:25], inst[11:7]} : 
-		(b_format) ? {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1b'0} :
+		(lui | auipc) ? {inst[31:12], 12b'0} : 
 		jal ? {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0} : 
 		jalr ? {{20{inst[31]}}, inst[31:20]} : 
-		(lui | auipc) ? {inst[31:12], 12b'0} : 
+		(b_format) ? {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1b'0} : 
+		(i_format | il_format) ? {{20{inst[31]}}, inst[31:20]} : 
+		s_format ? {{20{inst[31]}}, inst[31:25], inst[11:7]} : 
+		//csr ? 
 		32h'0; 
 		/*
 	assign alu_sel_o = 

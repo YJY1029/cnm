@@ -23,8 +23,4 @@ module CoNM(
 		.jump(extl_pc_jump), 
 		.jump_addr(extl_pc_jump_addr), 
 		.hold(extl_pc_hold), 
-		.pc_o(pc_prp_f1_pc_o), //is junction available? 
-		.inst_o(pc_f1_o)//this might not be right, considering using fliop1 as ir
-	);
-	
-	
+		.pc_o(

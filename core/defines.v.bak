@@ -40,12 +40,6 @@
 `define OP2_IMM          2'b10
 `define OP2_NONE         2'b11
 
-//Mem read or write signals 
-`define MEM_RW             1:0
-`define MEM_READ         2'b00
-`define MEM_WRITE        2'b01
-`define MEM_DISABLE      2'b10
-
 //Branch selection signals
 `define BR_SEL             2:0
 `define BR_UNCON        3'b000
@@ -76,7 +70,7 @@
 `define RAM_ADDR_WIDTH    31:0  //?
 
 //CSRs, others might be needed while some below might be useless
-`define CSR_ADDR_WIDTH 11:0
+`define CSR_ADDR_WIDTH    11:0
 
 `define mstatus    12'h300	//*very complex
 `define misa       12'h301	//32'h40020000

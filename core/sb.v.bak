@@ -19,7 +19,7 @@ module sb(
 	output reg mem_re_o, 
 	output reg mem_we_o, 
 	output reg [`MEM_ADDR_WIDTH] mem_addr_o, 
-	output reg [`DATA_WIDTH] mem_wdata_o, 
+	output 
 	); 
 	
 	always @ (posedge clk) begin

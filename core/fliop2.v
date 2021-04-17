@@ -15,7 +15,7 @@ module fliop2(
 	input wire [`OP1_SEL] op1_sel, 
 	input wire [`OP2_SEL] op2_sel, 
 	input wire [`BR_SEL] br_sel, 
-	input wire [`MEM_RW] mem_rw, 
+	input wire [`MEM_RW] mem_rw,
 	input wire [`WB_SEL] wb_sel, 
 	input wire [`BYTE_SEL] byte_sel, 
 	
@@ -35,7 +35,8 @@ module fliop2(
 	output wire [`OP1_SEL] op1_sel_o, 
 	output wire [`OP2_SEL] op2_sel_o, 
 	output wire [`BR_SEL] br_sel_o, 
-	output wire [`MEM_RW] mem_rw_o, 
+	output wire mem_re_o, 
+	output wire mem_we_o,
 	output wire [`WB_SEL] wb_sel_o, 
 	output wire [`BYTE_SEL] byte_sel_o, 
 	output wire [`DATA_WIDTH] rs1_rdata_o, 
@@ -79,7 +80,7 @@ module fliop2(
 	gnrl_dff #(3) br_sel_dff(clk, rst, hold, `BR_DISABLE, br_sel, br_sel_r); 
 	assign br_sel_o = br_sel_r; 
 	
-	wire [`MEM_RW] mem_rw_r; 
+	wire mem_rw_r; 
 	gnrl_dff #(2) mem_rw_dff(clk, rst, hold, `MEM_DISABLE, mem_rw, mem_rw_r); 
 	assign mem_rw_o = mem_rw_r; 
 	
