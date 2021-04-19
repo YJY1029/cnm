@@ -40,6 +40,12 @@
 `define OP2_IMM          2'b10
 `define OP2_NONE         2'b11
 
+//Mem read or write signals 
+`define MEM_RW             1:0
+`define MEM_READ         2'b00
+`define MEM_WRITE        2'b01
+`define MEM_DISABLE      2'b10
+
 //Branch selection signals
 `define BR_SEL             2:0
 `define BR_UNCON        3'b000
@@ -54,7 +60,7 @@
 //Writeback selection signals
 `define WB_SEL             2:0
 `define WB_RD           3'b000
-`define WB_U_TYPE       3'b001
+`define WB_UJ_TYPE       3'b001
 `define WB_MEM          3'b010
 `define WB_CSR          3'b011
 `define WB_NONE         3'b100

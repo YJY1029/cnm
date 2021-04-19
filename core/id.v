@@ -14,8 +14,8 @@ module id(
 	output wire [`CSR_ADDR_WIDTH] csr_raddr_o, 
 	
 	//to executrol
-	output wire inst_o, 
-	output wire inst_addr_o, 
+	output wire [`INST_WIDTH] inst_o, 
+	output wire [`INST_ADDR_WIDTH] inst_addr_o, 
 	output wire [`REG_ADDR_WIDTH] rd_waddr_o, 
 	output wire [`CSR_ADDR_WIDTH] csr_waddr_o, 
 	output wire [`DATA_WIDTH] imm_o, 
@@ -137,10 +137,6 @@ module id(
 	
 	assign inst_addr_o = inst_addr; 
 	
-	assign rd_we_o = 
-		(lui | auipc | jal | jalr | il_format | i_format | r_format | csr) ? `WRITE_ENABLE : 
-		1'b0; 
-	
 	assign rd_waddr_o = 
 		(lui | auipc | jal | jalr | il_format | i_format | r_format | csr) ? rd : 
 		`ZERO_REG; 
@@ -148,7 +144,7 @@ module id(
 	assign csr_waddr_o = 
 		csr ? inst[31:20] : 
 		`mdisable; 
-				
+	
 	assign imm_o = 
 		(lui | auipc) ? {inst[31:12], 12b'0} : 
 		jal ? {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0} : 
@@ -203,7 +199,7 @@ module id(
 	
 	assign wb_sel_o = 
 		(lui | auipc | il_format | i_format | r_format | fence_fencei) ? `WB_RD : 
-		(jal | jalr) ? `WB_U_TYPE : 
+		(jal | jalr) ? `WB_J_TYPE : 
 		s_format ? `WB_MEM : 
 		csr ? `WB_CSR : 
 		`WB_NONE; 

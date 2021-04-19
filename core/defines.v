@@ -60,7 +60,7 @@
 //Writeback selection signals
 `define WB_SEL             2:0
 `define WB_RD           3'b000
-`define WB_U_TYPE       3'b001
+`define WB_J_TYPE       3'b001
 `define WB_MEM          3'b010
 `define WB_CSR          3'b011
 `define WB_NONE         3'b100

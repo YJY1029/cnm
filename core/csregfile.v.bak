@@ -17,17 +17,16 @@ module csregfile(
 	//csr from id
 	input wire [`CSR_ADDR_WIDTH] csr_raddr, 
 	
-	//csr to executrol
-	output reg [`DATA_WIDTH] csr_rdata_o, 
-	
 	//regfile from executrol
-	input wire rd_we, 
-	input wire [`REG_ADDR_WIDTH] waddr, 
-	input wire [`DATA_WIDTH] wdata, 
+	input wire [`REG_ADDR_WIDTH] rd_waddr, 
+	input wire [`DATA_WIDTH] rd_wdata, 
 	
 	//regfile from id
 	input wire [`REG_ADDR_WIDTH] rs1_raddr, 
 	input wire [`REG_ADDR_WIDTH] rs2_raddr, 
+	
+	//csr to executrol
+	output reg [`DATA_WIDTH] csr_rdata_o, 
 	
 	//regfile to executrol
 	output reg [`DATA_WIDTH] rs1_rdata_o, 
@@ -56,8 +55,8 @@ module csregfile(
 		//reading rs1
 		if (rs1_raddr == `ZERO_REG) begin
 			rs1_rdata_o = 32'h0; 
-		end else if (rs1_raddr == waddr && rd_we == `WRITE_ENABLE) begin
-			rs1_rdata_o = wdata; 
+		end else if (rs1_raddr == rd_waddr) begin
+			rs1_rdata_o = rd_wdata; 
 		end else begin//do we need a read signal? or just leave it to ZERO_REG?
 			rs1_rdata_o = regs[rs1_raddr];
 		end
@@ -65,8 +64,8 @@ module csregfile(
 		//reading rs2
 		if (rs2_raddr == `ZERO_REG) begin
 			rs2_rdata_o = 32'h0; 
-		end else if (rs2_raddr == waddr && rd_we == `WRITE_ENABLE) begin
-			rs2_rdata_o = wdata; 
+		end else if (rs2_raddr == rd_waddr) begin
+			rs2_rdata_o = rd_wdata; 
 		end else begin
 			rs2_rdata_o = regs[rs2_raddr];
 		end
@@ -138,10 +137,10 @@ module csregfile(
 			cycle <= cycle+1b'1; 
 			
 			//writing rd
-			if (rd_we == `WRITE_ENABLE) && (waddr != `ZERO_REG) begin 
-				regs[waddr_i] <= wdata; 
+			if (rd_we == `WRITE_ENABLE) && (rd_waddr != `ZERO_REG) begin 
+				regs[rd_waddr] <= rd_wdata; 
 				
-			end else if (csr_we == `WRITE_ENABLE) begin
+			end else if (csr_waddr != `mdisable) begin
 				case (csr_waddr)
 					`mstatus: begin
 						mstatus <= csr_wdata; 

@@ -81,8 +81,8 @@ module fliop2(
 	assign br_sel_o = br_sel_r; 
 	
 	wire mem_rw_r; 
-	gnrl_dff #(1) mem_re_dff(clk, rst, hold, `MEM_DISABLE, mem_re, mem_re_r); 
-	assign mem_re_o = mem_re_r; 
+	gnrl_dff #(2) mem_rw_dff(clk, rst, hold, `MEM_DISABLE, mem_rw, mem_rw_r); 
+	assign mem_rw_o = mem_rw_r; 
 	
 	wire [`WB_SEL] wb_sel_r; 
 	gnrl_dff #(3) wb_sel_dff(clk, rst, hold, `WB_NONE, wb_sel, wb_sel_r); 

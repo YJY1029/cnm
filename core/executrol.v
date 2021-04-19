@@ -24,7 +24,7 @@ module executrol(
 	input wire [`DATA_WIDTH] csr_rdata, 
 	
 	//from sb
-	input wire [`DATA_WIDTH] mem_rdata, 
+	input wire [`DATA_WIDTH] mem_rdata, //?
 	
 	//to csregfile 
 	output wire [`REG_ADDR_WIDTH] rd_waddr_o, 
@@ -78,7 +78,7 @@ module executrol(
 	wire br_disable; 
 	
 	wire wb_rd; 
-	wire wb_u_type; 
+	wire wb_j_type; 
 	wire wb_mem; 
 	wire wb_csr; 
 	wire wb_none; 
@@ -145,17 +145,17 @@ module executrol(
 		
 	//write back selection, not completed
 	assign wb_rd = (wb_sel == `WB_RD); 
-	assign wb_u_type = (wb_sel == `WB_U_TYPE); 
+	assign wb_j_type = (wb_sel == `WB_J_TYPE); 
 	assign wb_mem = (wb_sel == `WB_MEM); 
 	assign wb_csr = (wb_sel == `WB_CSR); 
 	assign wb_none = (wb_sel == `WB_NONE); 
 	
 	assign rd_waddr_o = 
-		(wb_rd | wb_u_type) ? rd_waddr : 
+		(wb_rd | wb_j_type) ? rd_waddr : 
 		`ZERO_REG; 
 	assign rd_wdata_o = 
 		wb_rd ? alu_rslt : 
-		wb_u_type ? (inst_addr+32'h4) :
+		wb_j_type ? (inst_addr+32'h4) :
 		32'h0; 
 	
 	assign mem_raddr = alu_rslt; //?
