@@ -19,6 +19,6 @@ module pc(
 		(rst == `RST) ? `INI_INST_ADDR : 
 		(jump == `JUMP) ? jump_addr : 
 		(hold == `HOLD) ? pc_o : 
-		pc_o + 32h'4; 
+		pc_o + 32'h4; 
 	
-end module
+endmodule

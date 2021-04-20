@@ -19,7 +19,10 @@ module csregfile(
 	
 	//regfile from executrol
 	input wire [`REG_ADDR_WIDTH] rd_waddr, 
-	input wire [`DATA_WIDTH] rd_wdata, 
+	input wire [`DATA_WIDTH] extl_rd_wdata, 
+	
+	//regfile from sb
+	input wire [`DATA_WIDTH] sb_rd_wdata, 
 	
 	//regfile from id
 	input wire [`REG_ADDR_WIDTH] rs1_raddr, 
@@ -50,13 +53,13 @@ module csregfile(
 	reg [`DATA_WIDTH] mcycleh; 
 	reg [`DATA_WIDTH] mvendorid; 
 	
-	//reading
+	//read
 	always @ (*) begin
 		//reading rs1
 		if (rs1_raddr == `ZERO_REG) begin
 			rs1_rdata_o = 32'h0; 
 		end else if (rs1_raddr == rd_waddr) begin
-			rs1_rdata_o = rd_wdata; 
+			rs1_rdata_o = (extl_rd_wdata|sb_rd_wdata); 
 		end else begin//do we need a read signal? or just leave it to ZERO_REG?
 			rs1_rdata_o = regs[rs1_raddr];
 		end
@@ -65,7 +68,7 @@ module csregfile(
 		if (rs2_raddr == `ZERO_REG) begin
 			rs2_rdata_o = 32'h0; 
 		end else if (rs2_raddr == rd_waddr) begin
-			rs2_rdata_o = rd_wdata; 
+			rs2_rdata_o = (extl_rd_wdata|sb_rd_wdata); 
 		end else begin
 			rs2_rdata_o = regs[rs2_raddr];
 		end
@@ -132,13 +135,13 @@ module csregfile(
 			//mip <= 32'h0; //pending related
 			mcycle <= 32'h0; 
 			mcycleh <= 32'h0; 
-			mvendorid <= 32h'13109f5; //Awesome you found an easter egg! In decimal form it's my birthday :-)
+			mvendorid <= 32'h13109f5; //Awesome you found an easter egg! In decimal form it's my birthday :-)
 		end else begin
-			cycle <= cycle+1b'1; 
+			cycle <= cycle+1'b1; 
 			
 			//writing rd
 			if (rd_waddr != `ZERO_REG) begin 
-				regs[rd_waddr] <= rd_wdata; 
+				regs[rd_waddr] <= (extl_rd_wdata|sb_rd_wdata); 
 				
 			end else if (csr_waddr != `mdisable) begin
 				case (csr_waddr)
@@ -182,3 +185,4 @@ module csregfile(
 			end
 		end
 	end
+endmodule

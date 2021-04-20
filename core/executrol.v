@@ -17,14 +17,12 @@ module executrol(
 	input wire [`BR_SEL] br_sel, 
 	input wire [`WB_SEL] wb_sel, 
 	input wire [`BYTE_SEL] byte_sel, 
+	input wire load_sign, 
 	
 	//from csregfile
 	input wire [`DATA_WIDTH] rs1_rdata, 
 	input wire [`DATA_WIDTH] rs2_rdata, 
 	input wire [`DATA_WIDTH] csr_rdata, 
-	
-	//from sb
-	input wire [`DATA_WIDTH] mem_rdata, //?
 	
 	//to csregfile 
 	output wire [`REG_ADDR_WIDTH] rd_waddr_o, 
@@ -34,6 +32,7 @@ module executrol(
 	
 	//to sb
 	output wire [`BYTE_SEL] byte_sel_o, 
+	output wire load_sign_o, 
 	output wire mem_re_o, 
 	output wire [`MEM_ADDR_WIDTH] mem_raddr_o, 
 	output wire mem_we_o, 
@@ -95,7 +94,7 @@ module executrol(
 	assign op1 = 
 		op1_rs1 ? rs1_rdata : 
 		op1_imm ? imm : 
-		op1_none ? 32'h0; 
+		32'h0; 
 	
 	//op2 selection
 	assign op2_rs2 = (op2_sel == `OP2_RS2); 
@@ -106,7 +105,7 @@ module executrol(
 		op2_rs2 ? rs2_rdata : 
 		op2_inst_addr ? inst_addr : 
 		op2_imm ? imm : 
-		op2_none ? 32'h0; 
+		32'h0; 
 	
 	//ALU operation
 	assign alu_add = (alu_sel == `ALU_ADD); 
@@ -127,7 +126,7 @@ module executrol(
 		alu_sll ? (op1<<op2[4:0]) : 
 		alu_srl ? (op1>>op2[4:0]) : 
 		alu_sra ? (op1>>>op2[4:0]) : 
-		alu_nop ? 32'h0; 
+		32'h0; 
 	
 	//branch selection
 	assign br_uncon = (br_sel == `BR_UNCON); 
@@ -137,28 +136,27 @@ module executrol(
 	assign br_ge = (br_sel == `BR_GE); 
 	assign br_ltu = (br_sel == `BR_LTU); 
 	assign br_geu = (br_sel == `BR_GEU); 
-	assign br_disable = (br_sel == `BR_DISABEL); 
+	assign br_disable = (br_sel == `BR_DISABLE); 
 	assign jump_o = 
-		(br_uncon | (br_eq & ($signed(op1) = $signed(op2))) | (br_ne & ($signed(op1) != $signed(op2))) | (br_lt & ($signed(op1) < $signed(op2))) | (br_ge & ($signed(op1) >= $signed(op2))) | (br_ltu & (op1 < op2)) | (br_geu & (op1 >= op2))) ? `JUMP : 
-		br_disable ? 1'b0; 
-	assign jump_addr_o = inst_addr+{{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1b'0}; //never mind jump_o flag, it's pc's business
+		(br_uncon | (br_eq & ($signed(op1) == $signed(op2))) | (br_ne & ($signed(op1) != $signed(op2))) | (br_lt & ($signed(op1) < $signed(op2))) | (br_ge & ($signed(op1) >= $signed(op2))) | (br_ltu & (op1 < op2)) | (br_geu & (op1 >= op2))) ? `JUMP : 
+		1'b0; 
+	assign jump_addr_o = inst_addr+{{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0}; //never mind jump_o flag, it's pc's business
 		
 	//write back selection, not completed
 	assign wb_rd = (wb_sel == `WB_RD); 
 	assign wb_j_type = (wb_sel == `WB_J_TYPE); 
+	assign wb_il_type = (wb_sel == `WB_IL_TYPE); 
 	assign wb_mem = (wb_sel == `WB_MEM); 
 	assign wb_csr = (wb_sel == `WB_CSR); 
 	assign wb_none = (wb_sel == `WB_NONE); 
 	
 	assign rd_waddr_o = 
-		(wb_rd | wb_j_type) ? rd_waddr : 
+		(wb_rd | wb_j_type | wb_il_type) ? rd_waddr : 
 		`ZERO_REG; 
 	assign rd_wdata_o = 
 		wb_rd ? alu_rslt : 
-		wb_j_type ? (inst_addr+32'h4) :
+		wb_j_type ? (inst_addr+32'h4) : 
 		32'h0; 
-	
-	assign mem_raddr = alu_rslt; //?
 	
 	assign csr_waddr_o = 
 		wb_csr ? csr_waddr : 
@@ -166,10 +164,19 @@ module executrol(
 	assign csr_wdata_o = 
 		wb_csr ? alu_rslt : 
 		32'h0; 
-		
+	
 	//mem read or write selection: integrating to wb_sel?  
 	assign mem_re_o = (mem_rw == `MEM_READ); 
-	assign mem_we_o = (mem_rw == `MEM_WRITE); 
+	assign mem_we_o = wb_mem & (mem_rw == `MEM_WRITE); 
 	
-	assign mem_raddr = mem_re_o ? alu_rslt; 
-	assign mem_waddr = mem_we_o ? alu_rslt; 
+	assign mem_raddr = 
+		mem_re_o ? alu_rslt : 
+		32'h0; 
+	assign mem_waddr = 
+		mem_we_o ? alu_rslt : 
+		32'h0; 
+	assign mem_wdata = 
+		mem_we_o ? rs2_rdata : 
+		32'h0; 
+	
+endmodule

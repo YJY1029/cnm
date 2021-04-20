@@ -60,17 +60,22 @@
 //Writeback selection signals
 `define WB_SEL             2:0
 `define WB_RD           3'b000
-`define WB_UJ_TYPE       3'b001
-`define WB_MEM          3'b010
-`define WB_CSR          3'b011
-`define WB_NONE         3'b100
+`define WB_J_TYPE       3'b001
+`define WB_IL_TYPE          3'b010
+`define WB_MEM          3'b011
+`define WB_CSR         3'b100
+`define WB_NONE         3'b101
 
 //S/L byte silection signals
-`define BYTE_SEL           1:0
-`define SL_BYTE          2'b00
-`define SL_HALFWORD      2'b01
-`define SL_WORD          2'b10
-`define SL_NONE          2'b11
+`define BYTE_SEL           3:0
+`define SL_BYTE          4'b0001
+`define SL_HALFWORD      4'b0011
+`define SL_WORD          4'b1111
+`define SL_NONE          4'b0000
+
+//load sign signals
+`define LOAD_UNSIGNED    1'b0
+`define LOAD_SIGNED      1'b1
 
 //RAM 
 `define RAM_ADDR_WIDTH    31:0  //?
@@ -90,7 +95,7 @@
 `define mcycle 		 12'hb00	//counting cycle times
 `define mcycleh 	 12'hb80  
 `define mvendorid  12'hf11 	//32'h13109f5   
-`defube mdisable   12'h000  //indicating no csr operations
+`define mdisable   12'h000  //indicating no csr operations
 /*These might be totally useless
 `define minstret 
 `define minstreth 
@@ -98,7 +103,7 @@
 */
 
 //NOP
-`define NOP 			32h'1b
+`define NOP 			32'h1b
 
 //U format
 `define LUI				7'b0110111

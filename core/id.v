@@ -25,7 +25,8 @@ module id(
 	output wire [`MEM_RW] mem_rw_o, 
 	output wire [`BR_SEL] br_sel_o, 
 	output wire [`WB_SEL] wb_sel_o, 
-	output wire [`BYTE_SEL] byte_sel_o
+	output wire [`BYTE_SEL] byte_sel_o, 
+	output wire load_sign_o 
 	);
 	/*
 	rd_we 2: enable, disable 
@@ -110,12 +111,12 @@ module id(
 	wire fencei = fence_fencei & (funct3 == `FENCEI); 
 	
 	//CSR
-	wire csrrw = envir_csr & (funct3 == `CSRRW);
-	wire csrrs = envir_csr & (funct3 == `CSRRS);
-	wire csrrc = envir_csr & (funct3 == `CSRRC);
-	wire csrrwi = envir_csr & (funct3 == `CSRRWI);
-	wire csrrsi = envir_csr & (funct3 == `CSRRSI);
-	wire csrrci = envir_csr & (funct3 == `CSRRCI); 
+	wire csrrw = csr & (funct3 == `CSRRW);
+	wire csrrs = csr & (funct3 == `CSRRS);
+	wire csrrc = csr & (funct3 == `CSRRC);
+	wire csrrwi = csr & (funct3 == `CSRRWI);
+	wire csrrsi = csr & (funct3 == `CSRRSI);
+	wire csrrci = csr & (funct3 == `CSRRCI); 
 	
 	//Environment
 	wire ecall = (inst == `ECALL); 
@@ -146,14 +147,14 @@ module id(
 		`mdisable; 
 	
 	assign imm_o = 
-		(lui | auipc) ? {inst[31:12], 12b'0} : 
+		(lui | auipc) ? {inst[31:12], 12'b0} : 
 		jal ? {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0} : 
 		jalr ? {{20{inst[31]}}, inst[31:20]} : 
-		(b_format) ? {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1b'0} : 
+		(b_format) ? {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0} : 
 		(i_format | il_format) ? {{20{inst[31]}}, inst[31:20]} : 
 		s_format ? {{20{inst[31]}}, inst[31:25], inst[11:7]} : 
 		//csr ? 
-		32h'0; 
+		32'h0; 
 		/*
 	assign alu_sel_o = 
 		(({4{auipc}} | {4{jal}} | {4{jalr}} | {4{il_format}} | {4{s_format}} | {4{addi}} | {4{add}}) & `ALU_ADD) | 
@@ -203,5 +204,15 @@ module id(
 		s_format ? `WB_MEM : 
 		csr ? `WB_CSR : 
 		`WB_NONE; 
+	
+	assign byte_sel_o = 
+		(lb | lbu | sb) ? `SL_BYTE : 
+		(lh | lhu | sh) ? `SL_HALFWORD : 
+		(lw | sw) ? `SL_WORD : 
+		`SL_NONE; 
+	
+	assign load_sign_o = 
+		(lbu | lhu) ? `LOAD_SIGNED : 
+		`LOAD_UNSIGNED; 
 		
 endmodule

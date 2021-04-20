@@ -1,11 +1,8 @@
 
 # Core of Normal Microarchitecture
-## Memo - 4/19
-总体而言，现在是总线协议和写回的问题，依然对总体架构比较自信
-昨天玩了一天，预计周四前能完成
-周二：解决写回问题，粗略过一遍R类型和I类型
-周三下午：完成总线协议
-周三晚：检查，准备进行debug
+## Update Log - 4/20
+Ver 0.8.9 alpha finished, woohoo~
+Debugging!
 
 This project is an RV32I core of normal, simple and classical microarchitecture. 
 This first version of design is very simple, focusing on simplicity and readability rather than performance, as it only has a three-stage pipeline, which is divided into instruction fetch, instruction decoding and execution. 
@@ -32,7 +29,7 @@ Basically our core contains:
 
 ## Coding Style
 To enhance readability and coding convenience, several coding principles should be clarified: 
- - Clean and simple macro definitions and variable naming,  e.g. non-suffix input variables and instruction names, -r-suffixed register variables and -o-suffixed output variables. 
+ - Clean and simple macro definitions and variable naming,  e.g. non-suffixed input variables and instruction names, -r-suffixed register variables and -o-suffixed output variables. 
  - Using *assign* statements as conditionals, as to avoid uncertain states and priority selection circuits under some circumstances. 
  - Initiating standard D flip-flop modules implemented elsewhere, which will greatly benefit the implementation process as well. 
  - Omitting every possible read or write enable signal, replacing them with specific hard-wired address, following the rule of RISC. 

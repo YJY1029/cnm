@@ -3,31 +3,47 @@
 module CoNM(
 	input wire clk, 
 	input wire rst, 
-	
-	input ? [`INST_WIDTH] prp_inst,
-	
-	input ? [`DATA_WIDTH] prp_rdata, 
-	
-	output ? [`INST_ADDR_WIDTH] prp_inst_addr, 
-	
-	output ? prp_re_o, 
-	output ? prp_we_o, 
-	output ? [`MEM_ADDR_WIDTH] prp_addr, 
-	output ? [`DATA_WIDTH] prp_wdata 
+	//sb to pc
+	input wire [`INST_WIDTH] sb_pc_inst, 
+	//sb to csregfile
+	input wire [`DATA_WIDTH] sb_csrgf_rdata, 
+	//pc to sb
+	output wire [`INST_ADDR_WIDTH] pc_sb_inst_addr, 
+	//extl to sb
+	output wire extl_sb_load_sign_o, 
+	output wire [`BYTE_SEL] extl_sb_byte_mask_o, 
+	output wire extl_sb_mem_re_o, 
+	output wire extl_sb_mem_we_o, 
+	output wire [`MEM_ADDR_WIDTH] extl_sb_addr_o, 
+	output wire [`DATA_WIDTH] extl_sb_mem_wdata_o 
 	); 
 	
+	//these are executrol outputs
+	wire [`REG_ADDR_WIDTH] extl_csrgf_rd_waddr; 
+	wire [`DATA_WIDTH] extl_csrgf_rd_wdata; 
+	wire [`CSR_ADDR_WIDTH] extl_csrgf_csr_waddr; 
+	wire [`DATA_WIDTH] extl_csrgf_csr_wdata; 
+	wire extl_hold; 
+	wire extl_pc_jump; 
+	wire [`INST_ADDR_WIDTH] extl_pc_jump_addr; 
+	
 	//in pipeline stage order
+	wire [`INST_ADDR_WIDTH] pc_sb_f1_inst_addr; 
+	wire [`INST_WIDTH] pc_f1_o; 
+	assign pc_sb_inst_addr = pc_sb_f1_inst_addr; 
 	pc u_pc(
 		.rst(rst), 
-		.inst(prp_inst), 
+		.inst(sb_pc_inst), 
 		.jump(extl_pc_jump), 
 		.jump_addr(extl_pc_jump_addr), 
 		.hold(extl_hold), 
 		
-		.pc_o(pc_prp_f1_pc_o), //is junction available? 
-		.inst_o(pc_f1_o)//this might not be right, considering using fliop1 as ir
+		.pc_o(pc_sb_f1_inst_addr), 
+		.inst_o(pc_f1_inst)//this might not be right, considering using fliop1 as ir
 	);
 	
+	wire [`INST_WIDTH] f1_id_inst; 
+	wire [`INST_ADDR_WIDTH] f1_id_inst_addr; 
 	fliop1 u_fliop1(
 		.clk(clk), 
 		.rst(rst), 
@@ -39,6 +55,21 @@ module CoNM(
 		.inst_addr_o(f1_id_inst_addr)
 	);
 	
+	wire [`REG_ADDR_WIDTH] id_csrgf_rs1_raddr; 
+	wire [`REG_ADDR_WIDTH] id_csrgf_rs2_raddr; 
+	wire [`CSR_ADDR_WIDTH] id_csrgf_csr_raddr; 
+	wire [`INST_WIDTH] id_f2_inst; 
+	wire [`INST_ADDR_WIDTH] id_f2_inst_addr; 
+	wire [`REG_ADDR_WIDTH] id_f2_csr_waddr; 
+	wire [`DATA_WIDTH] id_f2_imm; 
+	wire [`ALU_SEL] id_f2_alu_sel; 
+	wire [`OP1_SEL] id_f2_op1_sel; 
+	wire [`OP2_SEL] id_f2_op2_sel; 
+	wire [`MEM_RW] id_f2_mem_rw; 
+	wire [`BR_SEL] id_f2_br_sel; 
+	wire [`WB_SEL] id_f2_wb_sel; 
+	wire [`BYTE_SEL] id_f2_byte_sel; 
+	wire id_f2_load_sign; 
 	id u_id(
 		.rst(rst), 
 		.inst(f1_id_inst), 
@@ -47,7 +78,7 @@ module CoNM(
 		.rs1_raddr_o(id_csrgf_rs1_raddr), 
 		.rs2_raddr_o(id_csrgf_rs2_raddr), 
 		.csr_raddr_o(id_csrgf_csr_raddr), 
-		.inst_o(id_extl_inst), 
+		.inst_o(id_f2_inst), 
 		.inst_addr_o(id_f2_inst_addr), 
 		.rd_waddr_o(id_f2_rd_waddr), 
 		.csr_waddr_o(id_f2_csr_waddr), 
@@ -58,9 +89,13 @@ module CoNM(
 		.mem_rw_o(id_f2_mem_rw), 
 		.br_sel_o(id_f2_br_sel), 
 		.wb_sel_o(id_f2_wb_sel), 
-		.byte_sel_o(id_f2_byte_sel)
+		.byte_sel_o(id_f2_byte_sel), 
+		.load_sign_o(id_f2_load_sign)
 	); 
 	
+	wire [`DATA_WIDTH] csrgf_f2_csr_rdata; 
+	wire [`DATA_WIDTH] csrgf_f2_rs1_rdata; 
+	wire [`DATA_WIDTH] csrgf_f2_rs2_rdata; 
 	csregfile u_csregfile(
 		.clk(clk), 
 		.rst(rst), 
@@ -68,21 +103,38 @@ module CoNM(
 		.csr_wdata(extl_csrgf_csr_wdata), 
 		.csr_raddr(id_csrgf_csr_raddr), 
 		.rd_waddr(extl_csrgf_rd_waddr), 
-		.rd_wdata(extl_csrgf_rd_wdata), 
+		.extl_rd_wdata(extl_csrgf_rd_wdata), 
+		.sb_extl_rd_wdata(sb_csrgf_rdata), 
 		.rs1_data(id_csrgf_rs1_raddr), 
 		.rs2_data(id_csrgf_rs2_raddr), 
 		
 		.csr_rdata(csrgf_f2_csr_rdata), 
 		.rs1_rdata(csrgf_f2_rs1_rdata), 
-		.rs1_rdata(csrgf_f2_rs2_rdata)
+		.rs2_rdata(csrgf_f2_rs2_rdata)
 	);
 	
+	wire [`INST_WIDTH] f2_extl_inst; 
+	wire [`INST_ADDR_WIDTH] f2_extl_inst_addr; 
+	wire [`REG_ADDR_WIDTH] f2_extl_rd_waddr; 
+	wire [`CSR_ADDR_WIDTH] f2_extl_csr_waddr; 
+	wire [`DATA_WIDTH] f2_extl_imm; 
+	wire [`ALU_SEL] f2_extl_alu_sel; 
+	wire [`OP1_SEL] f2_extl_op1_sel; 
+	wire [`OP2_SEL] f2_extl_op2_sel; 
+	wire [`MEM_RW] f2_extl_mem_rw; 
+	wire [`BR_SEL] f2_extl_br_sel; 
+	wire [`WB_SEL] f2_extl_wb_sel; 
+	wire [`BYTE_SEL] f2_extl_byte_sel; 
+	wire f2_extl_load_sign; 
+	wire [`DATA_WIDTH] f2_extl_rs1_rdata; 
+	wire [`DATA_WIDTH] f2_extl_rs2_rdata; 
+	wire [`DATA_WIDTH] f2_extl_csr_rdata; 
 	fliop2 u_fliop2(
 		.clk(clk), 
 		.rst(rst), 
 		.hold(extl_hold), 
 		.inst(id_f2_inst), 
-		.inst_addr(id_f2_inst), 
+		.inst_addr(id_f2_inst_addr), 
 		.rd_waddr(id_f2_rd_waddr), 
 		.csr_waddr(id_f2_csr_waddr), 
 		.imm(id_f2_imm), 
@@ -93,12 +145,13 @@ module CoNM(
 		.br_sel(id_f2_br_sel), 
 		.wb_sel(id_f2_wb_sel), 
 		.byte_sel(id_f2_byte_sel), 
+		.load_sign(id_f2_load_sign), 
 		.rs1_rdata(csrgf_f2_rs1_rdata), 
 		.rs2_rdata(csrgf_f2_rs2_rdata), 
 		.csr_rdata(csrgf_f2_csr_rdata), 
 		
 		.inst_o(f2_extl_inst), 
-		.inst_addr_o(f2_extl_inst), 
+		.inst_addr_o(f2_extl_inst_addr), 
 		.rd_waddr_o(f2_extl_rd_waddr), 
 		.csr_waddr_o(f2_extl_csr_waddr), 
 		.imm_o(f2_extl_imm), 
@@ -109,25 +162,33 @@ module CoNM(
 		.br_sel_o(f2_extl_br_sel), 
 		.wb_sel_o(f2_extl_wb_sel), 
 		.byte_sel_o(f2_extl_byte_sel), 
+		.load_sign_o(f2_extl_load_sign),
 		.rs1_rdata_o(f2_extl_rs1_rdata), 
 		.rs2_rdata_o(f2_extl_rs2_rdata), 
 		.csr_rdata_o(f2_extl_csr_rdata)
 	);
 	
+	wire [`MEM_ADDR_WIDTH] extl_sb_mem_raddr; 
+	wire [`MEM_ADDR_WIDTH] extl_sb_mem_waddr; 
+	assign extl_sb_addr_o = //check this twice
+		extl_sb_mem_re_o ? extl_sb_mem_raddr : 
+		extl_sb_mem_we_o ? extl_sb_mem_waddr : 
+		32'h0; 
 	executrol u_executrol( 
 		.rst(rst), 
-		.inst(id_extl_inst), 
-		.inst_addr(id_extl_inst_addr), 
-		.rd_waddr(id_extl_rd_waddr), 
-		.csr_waddr(id_extl_csr_waddr), 
-		.imm(id_extl_imm), 
-		.alu_sel(id_extl_alu_sel), 
-		.op1_sel(id_extl_op1_sel), 
-		.op2_sel(id_extl_op2_sel), 
-		.mem_rw(id_extl_mem_rw), 
-		.br_sel(id_extl_br_sel), 
-		.wb_sel(id_extl_wb_sel), 
-		.byte_sel(id_extl_byte_sel),
+		.inst(f2_extl_inst), 
+		.inst_addr(f2_extl_inst_addr), 
+		.rd_waddr(f2_extl_rd_waddr), 
+		.csr_waddr(f2_extl_csr_waddr), 
+		.imm(f2_extl_imm), 
+		.alu_sel(f2_extl_alu_sel), 
+		.op1_sel(f2_extl_op1_sel), 
+		.op2_sel(f2_extl_op2_sel), 
+		.mem_rw(f2_extl_mem_rw), 
+		.br_sel(f2_extl_br_sel), 
+		.wb_sel(f2_extl_wb_sel), 
+		.byte_sel(f2_extl_byte_sel), 
+		.load_sign(f2_extl_load_sign), 
 		.rs1_rdata(csrgf_extl_rs1_rdata), 
 		.rs2_rdata(csrgf_extl_rs2_rdata), 
 		.csr_rdata(csrgf_extl_csr_rdata), 
@@ -136,14 +197,17 @@ module CoNM(
 		.rd_waddr_o(extl_csrgf_rd_waddr), 
 		.rd_wdata_o(extl_csrgf_rd_wdata), 
 		.csr_waddr_o(extl_csrgf_csr_waddr), 
-		.csr_wdata_o(extl_csrgf_csr_wdata), 
-		.byte_sel_o(extl_sb_byte_sel), 
-		.mem_re_o(extl_sb_mem_re), 
+		.csr_wdata_o(extl_csrgf_csr_wdata),
+		.load_sign_o(extl_sb_mem_load_sign_o), 
+		.byte_sel_o(extl_sb_byte_sel_o), 
+		.mem_re_o(extl_sb_mem_re_o), 
 		.mem_raddr_o(extl_sb_mem_raddr), 
-		.mem_we_o(extl_sb_mem_we), 
+		.mem_we_o(extl_sb_mem_we_o), 
 		.mem_waddr_o(extl_sb_mem_waddr), 
-		.mem_wdata_o(extl_sb_mem_wdata), 
+		.mem_wdata_o(extl_sb_mem_wdata_o), 
 		.hold_o(extl_hold), 
 		.jump_o(extl_pc_jump), 
 		.jump_addr_o(extl_pc_jump_addr)
 	);
+	
+endmodule
