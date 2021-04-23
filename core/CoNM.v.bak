@@ -23,6 +23,9 @@ module CoNM(
 	wire [`DATA_WIDTH] extl_csrgf_rd_wdata; 
 	wire [`CSR_ADDR_WIDTH] extl_csrgf_csr_waddr; 
 	wire [`DATA_WIDTH] extl_csrgf_csr_wdata; 
+	wire extl_hold; 
+	wire extl_pc_jump; 
+	wire [`INST_ADDR_WIDTH] extl_pc_jump_addr; 
 	
 	//in pipeline stage order
 	wire [`INST_ADDR_WIDTH] pc_sb_f1_inst_addr; 

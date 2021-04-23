@@ -4,7 +4,7 @@ module sb(
 	input wire clk, 
 	input wire rst, 
 	//master0 interface, executrol exclusive
-	input wire m0_load_sign, 
+	input wire m0_un_sign, 
 	input wire [`BYTE_SEL] m0_byte_mask, 
 	input wire m0_re, 
 	input wire m0_we, 
@@ -14,7 +14,7 @@ module sb(
 	output reg [`DATA_WIDTH] m0_rdata_o, 
 	
 	//master1 interface, pc exclusive
-	input wire m1_load_sign, 
+	input wire m1_un_sign, 
 	input wire [`BYTE_SEL] m1_byte_mask, 
 	input wire m1_re, 
 	input wire m1_we, 
@@ -37,8 +37,8 @@ module sb(
 			s_addr_o = m0_addr; 
 			m0_rdata_o = 
 				m0_byte_mask[3] ? s_rdata : 
-				m0_byte_mask[1] ? {{16{m0_load_sign&s_rdata[15]}}, {16{1'b1}}} & s_rdata : 
-				m0_byte_mask[0] ? {{24{m0_load_sign&s_rdata[15]}}, {8{1'b1}}} & s_rdata : 
+				m0_byte_mask[1] ? {{16{m0_un_sign&s_rdata[15]}}, {16{1'b1}}} & s_rdata : 
+				m0_byte_mask[0] ? {{24{m0_un_sign&s_rdata[15]}}, {8{1'b1}}} & s_rdata : 
 				32'h0; 
 		end else if (m0_we) begin 
 			s_rw_o = `WRITE_ENABLE; 
@@ -50,8 +50,8 @@ module sb(
 			s_addr_o = m1_addr; 
 			m1_rdata_o = 
 				m1_byte_mask[3] ? s_rdata : 
-				m1_byte_mask[1] ? {{16{m1_load_sign&s_rdata[15]}}, {16{1'b1}}} & s_rdata : 
-				m1_byte_mask[0] ? {{24{m1_load_sign&s_rdata[15]}}, {8{1'b1}}} & s_rdata : 
+				m1_byte_mask[1] ? {{16{m1_un_sign&s_rdata[15]}}, {16{1'b1}}} & s_rdata : 
+				m1_byte_mask[0] ? {{24{m1_un_sign&s_rdata[15]}}, {8{1'b1}}} & s_rdata : 
 				32'h0; 
 		end else if (m0_we) begin
 			s_rw_o = `WRITE_ENABLE; 

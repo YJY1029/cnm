@@ -26,7 +26,7 @@ module id(
 	output wire [`WB_SEL] wb_sel_o, 
 	output wire [`MEM_RW] mem_rw_o, 
 	output wire [`BYTE_SEL] byte_sel_o, 
-	output wire load_sign_o 
+	output wire un_sign_o 
 	);
 	/*
 	op1sel 3: rs1, imm, none
@@ -36,7 +36,7 @@ module id(
 	mem_rw 3: read, write, disable
 	wb_sel 6: rd, j_type, il_type, mem, csr, none
 	byte_sel 4: byte, halfword, word, none
-	load_sign 2: unsigned, signed
+	un_sign 2: unsigned, signed
 	*/
 	
 	//Instruction breakup
@@ -162,13 +162,14 @@ module id(
 		
 	assign alu_sel_o = 
 		(auipc | jal | jalr | il_format | s_format | addi | add) ? `ALU_ADD : //8
-		(b_format | slti | sltiu | slt | sltu | sub) ? `ALU_SUB : 
-		(xori | xorr) ? `ALU_XOR : 
-		(ori | orr) ? `ALU_OR : 
-		(andi | andd) ? `ALU_AND : 
+		(b_format | sub) ? `ALU_SUB : 
 		(slli | sll) ? `ALU_SLL : 
+		(slti | sltiu | slt | sltu) ? `ALU_SLT : 
+		(xori | xorr) ? `ALU_XOR : 
 		(srli | srl) ? `ALU_SRL : 
 		(srai | sra) ? `ALU_SRA : 
+		(ori | orr) ? `ALU_OR : 
+		(andi | andd) ? `ALU_AND : 
 		`ALU_NOP; 
 		
 	assign op1_sel_o = 
@@ -210,8 +211,8 @@ module id(
 		(lw | sw) ? `SL_WORD : 
 		`SL_NONE; 
 	
-	assign load_sign_o = 
-		(lbu | lhu) ? `LOAD_SIGNED : 
-		`LOAD_UNSIGNED; 
+	assign un_sign_o = 
+		(lbu | lhu | sltu | sltiu) ? `SIGNED : 
+		`UNSIGNED; 
 		
 endmodule

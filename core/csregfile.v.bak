@@ -141,7 +141,7 @@ module csregfile(
 			
 			//writing rd
 			if (rd_waddr != `ZERO_REG) begin 
-				regs[rd_waddr] <= (extl_rd_wdata|sb_rd_wdata); 
+				regs[rd_waddr] <= (extl_rd_wdata|sb_rd_wdata); //17
 				
 			end else if (csr_waddr != `mdisable) begin
 				case (csr_waddr)

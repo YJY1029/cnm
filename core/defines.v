@@ -35,13 +35,14 @@
 `define ALU_SEL            3:0
 `define ALU_ADD        4'b0000
 `define ALU_SUB        4'b0001
-`define ALU_XOR        4'b0010
-`define ALU_OR         4'b0011
-`define ALU_AND        4'b0100
-`define ALU_SLL        4'b0101
-`define ALU_SRL        4'b0110
-`define ALU_SRA        4'b0111
-`define ALU_NOP        4'b1000
+`define ALU_SLL        4'b0010
+`define ALU_SLT        4'b0011
+`define ALU_XOR        4'b0100
+`define ALU_SRL        4'b0101
+`define ALU_SRA        4'b0110
+`define ALU_OR         4'b0111
+`define ALU_AND        4'b1000
+`define ALU_NOP        4'b1001
 
 //Branch selection signals
 `define BR_SEL             2:0
@@ -77,8 +78,8 @@
 `define SL_NONE          4'b0000
 
 //load sign signals
-`define LOAD_UNSIGNED    1'b0
-`define LOAD_SIGNED      1'b1
+`define UNSIGNED    1'b0
+`define SIGNED      1'b1
 
 //CSRs, others might be needed while some below might be useless
 `define CSR_ADDR_WIDTH    11:0

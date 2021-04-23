@@ -38,7 +38,7 @@ module csregfile(
 	
 	reg [`DATA_WIDTH] regs[0:`REG_NUM-1];
 	
-	reg [`DATA_WIDTH*2] cycle; 
+	reg [1+2*`DATA_WIDTH] cycle; //might be wrong
 	
 	//some might be useless while others might be needed
 	reg [`DATA_WIDTH] mstatus; 

@@ -17,7 +17,7 @@ module executrol(
 	input wire [`BR_SEL] br_sel, 
 	input wire [`WB_SEL] wb_sel, 
 	input wire [`BYTE_SEL] byte_sel, 
-	input wire load_sign, 
+	input wire un_sign, 
 	
 	//from csregfile
 	input wire [`DATA_WIDTH] rs1_rdata, 
@@ -32,7 +32,7 @@ module executrol(
 	
 	//to sb
 	output wire [`BYTE_SEL] byte_sel_o, 
-	output wire load_sign_o, 
+	output wire un_sign_o, 
 	output wire mem_re_o, 
 	output wire [`MEM_ADDR_WIDTH] mem_raddr_o, 
 	output wire mem_we_o, 
@@ -58,12 +58,14 @@ module executrol(
 	
 	wire alu_add; 
 	wire alu_sub; 
-	wire alu_xor; 
-	wire alu_or; 
-	wire alu_and; 
 	wire alu_sll; 
+	wire alu_slt; 
+	wire alu_sltu; 
+	wire alu_xor; 
 	wire alu_srl; 
 	wire alu_sra; 
+	wire alu_or; 
+	wire alu_and; 
 	wire alu_nop; 
 	wire [`DATA_WIDTH] alu_rslt; 
 	
@@ -110,20 +112,24 @@ module executrol(
 	//ALU operation
 	assign alu_add = (alu_sel == `ALU_ADD); 
 	assign alu_sub = (alu_sel == `ALU_SUB); 
-	assign alu_xor = (alu_sel == `ALU_XOR); 
-	assign alu_or = (alu_sel == `ALU_OR); 
-	assign alu_and = (alu_sel == `ALU_AND); 
 	assign alu_sll = (alu_sel == `ALU_SLL); 
+	assign alu_slt = (alu_sel == `ALU_SLT) & (un_sign == `SIGNED);
+	assign alu_sltu = (alu_sel == `ALU_SLT) & (un_sign == `UNSIGNED); 
+	assign alu_xor = (alu_sel == `ALU_XOR); 
 	assign alu_srl = (alu_sel == `ALU_SRL); 
 	assign alu_sra = (alu_sel == `ALU_SRA); 
+	assign alu_or = (alu_sel == `ALU_OR); 
+	assign alu_and = (alu_sel == `ALU_AND); 
 	assign alu_nop = (alu_sel == `ALU_NOP); 
 	assign alu_rslt = 
 		alu_add ? (op1+op2) : //15
 		alu_sub ? (op1-op2) : 
+		alu_sll ? (op1<<op2[4:0]) : 
+		alu_slt ? ($signed(op1)<$signed(op2)) : 
+		alu_sltu ? (op1<op2) : 
 		alu_xor ? (op1^op2) : 
 		alu_or ? (op1|op2) : 
 		alu_and ? (op1&op2) : 
-		alu_sll ? (op1<<op2[4:0]) : 
 		alu_srl ? (op1>>op2[4:0]) : 
 		alu_sra ? (op1>>>op2[4:0]) : 
 		32'h0; 
@@ -138,7 +144,12 @@ module executrol(
 	assign br_geu = (br_sel == `BR_GEU); 
 	assign br_disable = (br_sel == `BR_DISABLE); 
 	assign jump_o = 
-		(br_uncon | (br_eq & ($signed(op1) == $signed(op2))) | (br_ne & ($signed(op1) != $signed(op2))) | (br_lt & ($signed(op1) < $signed(op2))) | (br_ge & ($signed(op1) >= $signed(op2))) | (br_ltu & (op1 < op2)) | (br_geu & (op1 >= op2))) ? `JUMP : 
+		(br_uncon | 
+		(br_eq & ($signed(op1) == $signed(op2))) | 
+		(br_ne & ($signed(op1) != $signed(op2))) | 
+		(br_lt & ($signed(op1) < $signed(op2))) | 
+		(br_ge & ($signed(op1) >= $signed(op2))) | 
+		(br_ltu & (op1 < op2)) | (br_geu & (op1 >= op2))) ? `JUMP : 
 		1'b0; 
 	assign jump_addr_o = inst_addr+{{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0}; //will jump_addr_o and jump_o cause timing problems? 
 		

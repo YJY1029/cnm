@@ -10,7 +10,7 @@ module CoNM(
 	//pc to sb
 	output wire [`INST_ADDR_WIDTH] pc_sb_inst_addr, 
 	//extl to sb
-	output wire extl_sb_load_sign_o, 
+	output wire extl_sb_un_sign_o, 
 	output wire [`BYTE_SEL] extl_sb_byte_mask_o, 
 	output wire extl_sb_mem_re_o, 
 	output wire extl_sb_mem_we_o, 
@@ -69,7 +69,7 @@ module CoNM(
 	wire [`BR_SEL] id_f2_br_sel; 
 	wire [`WB_SEL] id_f2_wb_sel; 
 	wire [`BYTE_SEL] id_f2_byte_sel; 
-	wire id_f2_load_sign; 
+	wire id_f2_un_sign; 
 	id u_id(
 		.rst(rst), 
 		.inst(f1_id_inst), 
@@ -90,7 +90,7 @@ module CoNM(
 		.br_sel_o(id_f2_br_sel), 
 		.wb_sel_o(id_f2_wb_sel), 
 		.byte_sel_o(id_f2_byte_sel), 
-		.load_sign_o(id_f2_load_sign)
+		.un_sign_o(id_f2_un_sign)
 	); 
 	
 	wire [`DATA_WIDTH] csrgf_f2_csr_rdata; 
@@ -125,7 +125,7 @@ module CoNM(
 	wire [`BR_SEL] f2_extl_br_sel; 
 	wire [`WB_SEL] f2_extl_wb_sel; 
 	wire [`BYTE_SEL] f2_extl_byte_sel; 
-	wire f2_extl_load_sign; 
+	wire f2_extl_un_sign; 
 	wire [`DATA_WIDTH] f2_extl_rs1_rdata; 
 	wire [`DATA_WIDTH] f2_extl_rs2_rdata; 
 	wire [`DATA_WIDTH] f2_extl_csr_rdata; 
@@ -145,7 +145,7 @@ module CoNM(
 		.br_sel(id_f2_br_sel), 
 		.wb_sel(id_f2_wb_sel), 
 		.byte_sel(id_f2_byte_sel), 
-		.load_sign(id_f2_load_sign), 
+		.un_sign(id_f2_un_sign), 
 		.rs1_rdata(csrgf_f2_rs1_rdata), 
 		.rs2_rdata(csrgf_f2_rs2_rdata), 
 		.csr_rdata(csrgf_f2_csr_rdata), 
@@ -162,7 +162,7 @@ module CoNM(
 		.br_sel_o(f2_extl_br_sel), 
 		.wb_sel_o(f2_extl_wb_sel), 
 		.byte_sel_o(f2_extl_byte_sel), 
-		.load_sign_o(f2_extl_load_sign),
+		.un_sign_o(f2_extl_un_sign),
 		.rs1_rdata_o(f2_extl_rs1_rdata), 
 		.rs2_rdata_o(f2_extl_rs2_rdata), 
 		.csr_rdata_o(f2_extl_csr_rdata)
@@ -188,7 +188,7 @@ module CoNM(
 		.br_sel(f2_extl_br_sel), 
 		.wb_sel(f2_extl_wb_sel), 
 		.byte_sel(f2_extl_byte_sel), 
-		.load_sign(f2_extl_load_sign), 
+		.un_sign(f2_extl_un_sign), 
 		.rs1_rdata(csrgf_extl_rs1_rdata), 
 		.rs2_rdata(csrgf_extl_rs2_rdata), 
 		.csr_rdata(csrgf_extl_csr_rdata), 
@@ -198,7 +198,7 @@ module CoNM(
 		.rd_wdata_o(extl_csrgf_rd_wdata), 
 		.csr_waddr_o(extl_csrgf_csr_waddr), 
 		.csr_wdata_o(extl_csrgf_csr_wdata),
-		.load_sign_o(extl_sb_mem_load_sign_o), 
+		.un_sign_o(extl_sb_mem_un_sign_o), 
 		.byte_sel_o(extl_sb_byte_sel_o), 
 		.mem_re_o(extl_sb_mem_re_o), 
 		.mem_raddr_o(extl_sb_mem_raddr), 

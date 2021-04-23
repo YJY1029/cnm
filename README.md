@@ -1,7 +1,7 @@
 
 # Core of Normal Microarchitecture
 ## Update Log - 4/23
-pc.v passed; id being debugged; SLT(IU) INSTRUCTIONS ARE MISSING!!!
+fuck this I pulled an previous commit without local backup, fuck; slt(iu) made up; doing id testbench
 
 This project is an RV32I core of normal, simple and classical microarchitecture. 
 This first version of design is very simple, focusing on simplicity and readability rather than performance, as it only has a three-stage pipeline, which is divided into instruction fetch, instruction decoding and execution. 
