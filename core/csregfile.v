@@ -60,8 +60,8 @@ module csregfile(
 			rs1_rdata_o = 32'h0; 
 		end else if (rs1_raddr == rd_waddr) begin
 			rs1_rdata_o = (extl_rd_wdata|sb_rd_wdata); 
-		end else begin//do we need a read signal? or just leave it to ZERO_REG?
-			rs1_rdata_o = regs[rs1_raddr];
+		end else begin
+			rs1_rdata_o = regs[rs1_raddr];//12
 		end
 		
 		//reading rs2
@@ -141,7 +141,7 @@ module csregfile(
 			
 			//writing rd
 			if (rd_waddr != `ZERO_REG) begin 
-				regs[rd_waddr] <= (extl_rd_wdata|sb_rd_wdata); 
+				regs[rd_waddr] <= (extl_rd_wdata|sb_rd_wdata); //17
 				
 			end else if (csr_waddr != `mdisable) begin
 				case (csr_waddr)
