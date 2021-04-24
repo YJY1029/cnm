@@ -21,61 +21,61 @@
 
 //Op1 and op2 selection signals
 `define OP1_SEL            1:0
-`define OP1_RS1          2'b00
-`define OP1_IMM          2'b01
-`define OP1_NONE         2'b10
+`define OP1_NONE         2'b00
+`define OP1_RS1          2'b01
+`define OP1_IMM          2'b10
 
 `define OP2_SEL            1:0
-`define OP2_RS2          2'b00
-`define OP2_INST_ADDR    2'b01
-`define OP2_IMM          2'b10
-`define OP2_NONE         2'b11
+`define OP2_NONE         2'b00
+`define OP2_RS2          2'b01
+`define OP2_INST_ADDR    2'b10
+`define OP2_IMM          2'b11
 
 //ALU flags
 `define ALU_SEL            3:0
-`define ALU_ADD        4'b0000
-`define ALU_SUB        4'b0001
-`define ALU_SLL        4'b0010
-`define ALU_SLT         4'b0011
-`define ALU_XOR        4'b0100
-`define ALU_SRL        4'b0101
-`define ALU_SRA        4'b0110
-`define ALU_OR        4'b0111
-`define ALU_AND        4'b1000
-`define ALU_NOP        4'b1001
+`define ALU_NOP        4'b0000
+`define ALU_ADD        4'b0001
+`define ALU_SUB        4'b0010
+`define ALU_SLL        4'b0011
+`define ALU_SLT        4'b0100
+`define ALU_XOR        4'b0101
+`define ALU_SRL        4'b0110
+`define ALU_SRA        4'b0111
+`define ALU_OR         4'b1000
+`define ALU_AND        4'b1001
 
 //Branch selection signals
 `define BR_SEL             2:0
-`define BR_UNCON        3'b000
-`define BR_EQ           3'b001
-`define BR_NE           3'b010
-`define BR_LT           3'b011
-`define BR_GE           3'b100
-`define BR_LTU          3'b101
-`define BR_GEU          3'b110
-`define BR_DISABLE      3'b111
-
-//Mem read or write signals 
-`define MEM_RW             1:0
-`define MEM_READ         2'b00
-`define MEM_WRITE        2'b01
-`define MEM_DISABLE      2'b10
+`define BR_DISABLE      3'b000
+`define BR_UNCON        3'b001
+`define BR_EQ           3'b010
+`define BR_NE           3'b011
+`define BR_LT           3'b100
+`define BR_GE           3'b101
+`define BR_LTU          3'b110
+`define BR_GEU          3'b111
 
 //Writeback selection signals
 `define WB_SEL             2:0
-`define WB_RD           3'b000
-`define WB_J_TYPE       3'b001
-`define WB_IL_TYPE          3'b010
-`define WB_MEM          3'b011
-`define WB_CSR         3'b100
-`define WB_NONE         3'b101
+`define WB_NONE         3'b000
+`define WB_RD           3'b001
+`define WB_J_TYPE       3'b010
+`define WB_IL_TYPE      3'b011
+`define WB_MEM          3'b100
+`define WB_CSR          3'b101
+
+//Mem read or write signals 
+`define MEM_RW             1:0
+`define MEM_DISABLE      2'b00
+`define MEM_READ         2'b01
+`define MEM_WRITE        2'b10
 
 //S/L byte selection signals
 `define BYTE_SEL           3:0
-`define SL_BYTE          4'b0001
-`define SL_HALFWORD      4'b0011
-`define SL_WORD          4'b1111
-`define SL_NONE          4'b0000
+`define SL_NONE        4'b0000
+`define SL_BYTE        4'b0001
+`define SL_HALFWORD    4'b0011
+`define SL_WORD        4'b1111
 
 //load sign signals
 `define UNSIGNED    1'b0

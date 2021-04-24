@@ -123,17 +123,11 @@ module id(
 	wire ebreak = (inst == `EBREAK); 
 	
 	//to csregfile
-	assign rs1_raddr_o = 
-		(jalr | b_format | il_format | s_format | i_format | r_format | csrrw | csrrs | csrrc) ? rs1 : //4
-		`ZERO_REG; 
+	assign rs1_raddr_o = rs1;//4
 		
-	assign rs2_raddr_o = 
-		(b_format | s_format | r_format) ? rs2 : 
-		`ZERO_REG; //5
+	assign rs2_raddr_o = rs2;//5
 		
-	assign csr_raddr_o = 
-		csr ? inst[31:20] : 
-		`mdisable; 
+	assign csr_raddr_o = inst[31:20]; 
 		
 	//to executrol
 	assign inst_o = inst; 
@@ -141,13 +135,11 @@ module id(
 	assign inst_addr_o = inst_addr; 
 	
 	assign rd_waddr_o = 
-		(lui | auipc | jal | jalr | il_format | i_format | r_format | csr) ? rd : 
+		(lui | auipc | jal | jalr | il_format | i_format | r_format | csr) ? rd : //should this be omitted also? 
 		//6
 		`ZERO_REG; 
 		
-	assign csr_waddr_o = 
-		csr ? inst[31:20] : 
-		`mdisable; 
+	assign csr_waddr_o = inst[31:20]; 
 	
 	assign imm_o = 
 		(lui | auipc) ? {inst[31:12], 12'b0} : 
@@ -161,7 +153,7 @@ module id(
 		//priviledged part from here on not finished
 		
 	assign alu_sel_o = 
-		(auipc | jal | jalr | il_format | s_format | addi | add) ? `ALU_ADD : //8
+		(lui | auipc | jal | jalr | il_format | s_format | addi | add) ? `ALU_ADD : //8
 		(b_format | sub) ? `ALU_SUB : 
 		(slli | sll) ? `ALU_SLL : 
 		(slti | sltiu | slt | sltu) ? `ALU_SLT : 
@@ -192,15 +184,14 @@ module id(
 		(jal | jalr) ? `BR_UNCON : 
 		beq ? `BR_EQ : 
 		bne ? `BR_NE : 
-		blt ? `BR_LT : 
-		bge ? `BR_GE : 
-		bltu ? `BR_LTU : 
-		bgeu ? `BR_GEU : 
+		(blt | bltu) ? `BR_LT : 
+		(bge | bgeu) ? `BR_GE : 
 		`BR_DISABLE; 
 	
 	assign wb_sel_o = 
-		(lui | auipc | il_format | i_format | r_format | fence_fencei) ? `WB_RD : //11
+		(lui | auipc | i_format | r_format | fence_fencei) ? `WB_RD : //11
 		(jal | jalr) ? `WB_J_TYPE : 
+		il_format ? `WB_IL_TYPE : 
 		s_format ? `WB_MEM : 
 		csr ? `WB_CSR : 
 		`WB_NONE; 
@@ -212,7 +203,7 @@ module id(
 		`SL_NONE; 
 	
 	assign un_sign_o = 
-		(lbu | lhu | sltu | sltiu) ? `SIGNED : 
-		`UNSIGNED; 
+		(lbu | lhu | sltu | sltiu | bltu | bgeu) ? `UNSIGNED : 
+		`SIGNED; 
 		
 endmodule

@@ -128,10 +128,10 @@ module executrol(
 		alu_slt ? ($signed(op1)<$signed(op2)) : 
 		alu_sltu ? (op1<op2) : 
 		alu_xor ? (op1^op2) : 
-		alu_or ? (op1|op2) : 
-		alu_and ? (op1&op2) : 
 		alu_srl ? (op1>>op2[4:0]) : 
 		alu_sra ? (op1>>>op2[4:0]) : 
+		alu_or ? (op1|op2) : 
+		alu_and ? (op1&op2) : 
 		32'h0; 
 	
 	//branch selection
@@ -140,16 +140,17 @@ module executrol(
 	assign br_ne = (br_sel == `BR_NE); 
 	assign br_lt = (br_sel == `BR_LT); 
 	assign br_ge = (br_sel == `BR_GE); 
-	assign br_ltu = (br_sel == `BR_LTU); 
-	assign br_geu = (br_sel == `BR_GEU); 
+	assign br_ltu = (br_sel == `BR_LTU) & (un_sign == `UNSIGNED); 
+	assign br_geu = (br_sel == `BR_GEU) & (un_sign == `UNSIGNED); 
 	assign br_disable = (br_sel == `BR_DISABLE); 
 	assign jump_o = 
 		(br_uncon | 
-		(br_eq & ($signed(op1) == $signed(op2))) | 
-		(br_ne & ($signed(op1) != $signed(op2))) | 
+		(br_eq & (op1 == op2)) | 
+		(br_ne & (op1 != op2)) | 
 		(br_lt & ($signed(op1) < $signed(op2))) | 
 		(br_ge & ($signed(op1) >= $signed(op2))) | 
-		(br_ltu & (op1 < op2)) | (br_geu & (op1 >= op2))) ? `JUMP : 
+		(br_ltu & (op1 < op2)) | 
+		(br_geu & (op1 >= op2))) ? `JUMP : 
 		1'b0; 
 	assign jump_addr_o = inst_addr+{{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0}; //will jump_addr_o and jump_o cause timing problems? 
 		
