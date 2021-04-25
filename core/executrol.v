@@ -10,12 +10,12 @@ module executrol(
 	input wire [`REG_ADDR_WIDTH] rd_waddr, 
 	input wire [`CSR_ADDR_WIDTH] csr_waddr, 
 	input wire [`DATA_WIDTH] imm, 
-	input wire [`ALU_SEL] alu_sel, 
 	input wire [`OP1_SEL] op1_sel, 
 	input wire [`OP2_SEL] op2_sel, 
-	input wire [`MEM_RW] mem_rw,
+	input wire [`ALU_SEL] alu_sel, 
 	input wire [`BR_SEL] br_sel, 
 	input wire [`WB_SEL] wb_sel, 
+	input wire [`MEM_RW] mem_rw,
 	input wire [`BYTE_SEL] byte_sel, 
 	input wire un_sign, 
 	
@@ -180,14 +180,16 @@ module executrol(
 	//mem read or write selection  
 	assign mem_re_o = (mem_rw == `MEM_READ); 
 	assign mem_we_o = wb_mem & (mem_rw == `MEM_WRITE); 
+	assign byte_sel_o = byte_sel; 
+	assign un_sign_o = un_sign; 
 	
-	assign mem_raddr = 
+	assign mem_raddr_o = 
 		mem_re_o ? alu_rslt : 
 		32'h0; 
-	assign mem_waddr = 
+	assign mem_waddr_o = 
 		mem_we_o ? alu_rslt : 
 		32'h0; 
-	assign mem_wdata = 
+	assign mem_wdata_o = 
 		mem_we_o ? rs2_rdata : 
 		32'h0; 
 	

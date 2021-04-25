@@ -91,16 +91,16 @@ csregfile u_csregfile(
 		#10; 
 		
 		//90ns, csr read
-		csr_raddr = `mepc; 
+		csr_waddr = `mepc; 
 		#10; 
 		//100ns
-		csr_raddr = `mcycle; 
+		csr_waddr = `mcycle; 
 		#10; 
 		//110ns
-		csr_raddr = `mcycleh; 
+		csr_waddr = `mcycleh; 
 		#10; 
 		//120ns
-		csr_raddr = `mvendorid; 
+		csr_waddr = `mvendorid; 
 		#10; 
 		
 		//130 ns, if csr read and write coincide

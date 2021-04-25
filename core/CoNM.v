@@ -104,9 +104,9 @@ module CoNM(
 		.csr_raddr(id_csrgf_csr_raddr), 
 		.rd_waddr(extl_csrgf_rd_waddr), 
 		.extl_rd_wdata(extl_csrgf_rd_wdata), 
-		.sb_extl_rd_wdata(sb_csrgf_rdata), 
-		.rs1_data(id_csrgf_rs1_raddr), 
-		.rs2_data(id_csrgf_rs2_raddr), 
+		.sb_rd_wdata(sb_csrgf_rdata), 
+		.rs1_raddr(id_csrgf_rs1_raddr), 
+		.rs2_raddr(id_csrgf_rs2_raddr), 
 		
 		.csr_rdata(csrgf_f2_csr_rdata), 
 		.rs1_rdata(csrgf_f2_rs1_rdata), 
@@ -118,12 +118,12 @@ module CoNM(
 	wire [`REG_ADDR_WIDTH] f2_extl_rd_waddr; 
 	wire [`CSR_ADDR_WIDTH] f2_extl_csr_waddr; 
 	wire [`DATA_WIDTH] f2_extl_imm; 
-	wire [`ALU_SEL] f2_extl_alu_sel; 
 	wire [`OP1_SEL] f2_extl_op1_sel; 
 	wire [`OP2_SEL] f2_extl_op2_sel; 
-	wire [`MEM_RW] f2_extl_mem_rw; 
+	wire [`ALU_SEL] f2_extl_alu_sel; 
 	wire [`BR_SEL] f2_extl_br_sel; 
 	wire [`WB_SEL] f2_extl_wb_sel; 
+	wire [`MEM_RW] f2_extl_mem_rw; 
 	wire [`BYTE_SEL] f2_extl_byte_sel; 
 	wire f2_extl_un_sign; 
 	wire [`DATA_WIDTH] f2_extl_rs1_rdata; 
@@ -138,12 +138,12 @@ module CoNM(
 		.rd_waddr(id_f2_rd_waddr), 
 		.csr_waddr(id_f2_csr_waddr), 
 		.imm(id_f2_imm), 
-		.alu_sel(id_f2_alu_sel), 
 		.op1_sel(id_f2_op1_sel), 
 		.op2_sel(id_f2_op2_sel), 
-		.mem_rw(id_f2_mem_rw), 
+		.alu_sel(id_f2_alu_sel), 
 		.br_sel(id_f2_br_sel), 
 		.wb_sel(id_f2_wb_sel), 
+		.mem_rw(id_f2_mem_rw), 
 		.byte_sel(id_f2_byte_sel), 
 		.un_sign(id_f2_un_sign), 
 		.rs1_rdata(csrgf_f2_rs1_rdata), 
@@ -155,12 +155,12 @@ module CoNM(
 		.rd_waddr_o(f2_extl_rd_waddr), 
 		.csr_waddr_o(f2_extl_csr_waddr), 
 		.imm_o(f2_extl_imm), 
-		.alu_sel_o(f2_extl_alu_sel), 
 		.op1_sel_o(f2_extl_op1_sel), 
 		.op2_sel_o(f2_extl_op2_sel), 
-		.mem_rw_o(f2_extl_mem_rw), 
+		.alu_sel_o(f2_extl_alu_sel), 
 		.br_sel_o(f2_extl_br_sel), 
 		.wb_sel_o(f2_extl_wb_sel), 
+		.mem_rw_o(f2_extl_mem_rw), 
 		.byte_sel_o(f2_extl_byte_sel), 
 		.un_sign_o(f2_extl_un_sign),
 		.rs1_rdata_o(f2_extl_rs1_rdata), 
@@ -181,18 +181,17 @@ module CoNM(
 		.rd_waddr(f2_extl_rd_waddr), 
 		.csr_waddr(f2_extl_csr_waddr), 
 		.imm(f2_extl_imm), 
-		.alu_sel(f2_extl_alu_sel), 
 		.op1_sel(f2_extl_op1_sel), 
 		.op2_sel(f2_extl_op2_sel), 
-		.mem_rw(f2_extl_mem_rw), 
+		.alu_sel(f2_extl_alu_sel), 
 		.br_sel(f2_extl_br_sel), 
 		.wb_sel(f2_extl_wb_sel), 
+		.mem_rw(f2_extl_mem_rw), 
 		.byte_sel(f2_extl_byte_sel), 
 		.un_sign(f2_extl_un_sign), 
 		.rs1_rdata(csrgf_extl_rs1_rdata), 
 		.rs2_rdata(csrgf_extl_rs2_rdata), 
 		.csr_rdata(csrgf_extl_csr_rdata), 
-		//.mem_rdata(sb_extl_mem_rdata), 
 		
 		.rd_waddr_o(extl_csrgf_rd_waddr), 
 		.rd_wdata_o(extl_csrgf_rd_wdata), 
