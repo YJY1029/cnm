@@ -1,4 +1,4 @@
-`include "defines.v"
+`include "../core/defines.v"
 
 module extl_tb(); 
 
@@ -235,6 +235,83 @@ executrol u_extl(
 		rs2_rdata = 32'b10; 
 		csr_rdata = 32'b11; 
 		#10; 
+		
+		//90ns, bge x3, x4, 32'b{19{1}}1011111100000
+		inst = 32'b11111110001000001101000001100011; 
+		inst_addr = 32'b11100; 
+		rd_waddr = 5'b0; 
+		csr_waddr = 12'b111111100010; 
+		imm = {{19{1'b1}}, 12'b101111110000, {1'b0}}; 
+		op1_sel = 2'b1; 
+		op2_sel = 2'b1; 
+		alu_sel = 4'b10; 
+		br_sel = 3'b101; 
+		wb_sel = 3'b0; 
+		mem_rw = 2'b0; 
+		byte_sel = 4'b0; 
+		un_sign = 1'b1; 
+		rs1_rdata = {1'b1, {31{1'b0}}}; 
+		rs2_rdata = 32'b1; 
+		csr_rdata = 32'b10; 
+		#10; 
+		
+		//100ns, slt x32, x1, x2
+		inst = 32'b
+		inst_addr = 32'b
+		rd_waddr = 5'b
+		csr_waddr = 12'b
+		imm = 32'b
+		op1_sel = 2'b
+		op2_sel = 2'b
+		alu_sel = 4'b
+		br_sel = 3'b
+		wb_sel = 3'b
+		mem_rw = 2'b
+		byte_sel = 4'b
+		un_sign =1'b
+		rs1_rdata = 32'b
+		rs2_rdata = 32'b
+		csr_rdata = 32'b
+		#10; 
+		
+		//110ns, sra
+		inst = 32'b
+		inst_addr = 32'b
+		rd_waddr = 5'b
+		csr_waddr = 12'b
+		imm = 32'b
+		op1_sel = 2'b
+		op2_sel = 2'b
+		alu_sel = 4'b
+		br_sel = 3'b
+		wb_sel = 3'b
+		mem_rw = 2'b
+		byte_sel = 4'b
+		un_sign =1'b
+		rs1_rdata = 32'b
+		rs2_rdata = 32'b
+		csr_rdata = 32'b
+		#10; 
+		
+		//120ns, ori
+		inst = 32'b
+		inst_addr = 32'b
+		rd_waddr = 5'b
+		csr_waddr = 12'b
+		imm = 32'b
+		op1_sel = 2'b
+		op2_sel = 2'b
+		alu_sel = 4'b
+		br_sel = 3'b
+		wb_sel = 3'b
+		mem_rw = 2'b
+		byte_sel = 4'b
+		un_sign =1'b
+		rs1_rdata = 32'b
+		rs2_rdata = 32'b
+		csr_rdata = 32'b
+		#10; 
+		
 		/*
 		
 		//

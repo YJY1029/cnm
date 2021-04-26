@@ -30,28 +30,28 @@ module pc_tb();
 		.inst_o(inst_o)
 		);
 		
-		initial begin
-			rst = `RST; 
-			inst = 32'b1010101010100000100011110010011; //addi x32, x1, 	101010101010
-			jump = 1'b0; 
-			jump_addr = `INI_INST_ADDR; 
-			hold = 1'b0; 
-			#10; //Reset
-			
-			rst = 1'b1; 
-			#10; //Nothing happens, pc+=4
-			
-			hold = `HOLD; 
-			#10; //Holds, pc=pc
-			
-			jump = `JUMP; 
-			#10; //Jump back to initial address
-			
-			jump_addr = 32'b10100001010010100; 
-			#10; //Jump to some random address
+	initial begin
+		rst = `RST; 
+		inst = 32'b1010101010100000100011110010011; //addi x32, x1, 101010101010
+		jump = 1'b0; 
+		jump_addr = `INI_INST_ADDR; 
+		hold = 1'b0; 
+		#10; //Reset
 		
-			rst = `RST; 
-			#10; //Reset
-		end
+		rst = 1'b1; 
+		#10; //Nothing happens, pc+=4
 		
+		hold = `HOLD; 
+		#10; //Holds, pc=pc
+		
+		jump = `JUMP; 
+		#10; //Jump back to initial address
+		
+		jump_addr = 32'b10100001010010100; 
+		#10; //Jump to some random address
+		
+		rst = `RST; 
+		#10; //Reset
+	end
+	
 endmodule

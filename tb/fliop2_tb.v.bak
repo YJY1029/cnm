@@ -110,8 +110,28 @@ fliop2 u_fliop2(
 		
 		//hold
 		hold = `HOLD; 
-		#30; 
+		#10; 
 		
+		//bge x1, x2, 32'b{19{1}}1011111100000
+		inst = 32'b11111110001000001101000001100011; 
+		inst_addr = 32'b100; 
+		rd_waddr = 5'b0; 
+		csr_waddr = 12'b111111100010; 
+		imm = {{19{1'b1}}, 12'b101111110000, {1'b0}}; 
+		op1_sel = 2'b1; 
+		op2_sel = 2'b1; 
+		alu_sel = 4'b10; 
+		br_sel = 3'b101; 
+		wb_sel = 3'b0; 
+		mem_rw = 2'b0; 
+		byte_sel = 4'b0; 
+		un_sign = 1'b1; 
+		rs1_rdata = 32'b11; 
+		rs2_rdata = 32'b10; 
+		csr_rdata = 32'b1; 
+		#20; 
+		
+		hold = 1'b0; 
 		
 		//addi x32, x1, 32'b1
 		inst = 32'b00000000000100001000111110010011; 

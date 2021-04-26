@@ -48,4 +48,4 @@ sb u_sb(
 	.s_rw_o(s_rw_o), 
 	.s_addr_o(s_addr_o), 
 	.s_wdata_o(s_wdata_o)
-	); 
+	);

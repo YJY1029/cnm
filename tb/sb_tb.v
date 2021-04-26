@@ -1,6 +1,6 @@
 `include "../core/defines.v"
 
-module CoNM_mem_tb(); 
+module sb_tb(); 
 	
 	//Clock signal
 	localparam clk_period = 10; 
@@ -9,22 +9,28 @@ module CoNM_mem_tb();
 	always #(clk_period/2) clk = ~clk; 
 	
 	reg rst; 
+	reg m0_un_sign; 
+	reg [`BYTE_SEL] m0_byte_mask; 
+	reg m0_re; 
+	reg m0_we; 
+	reg [`MEM_ADDR_WIDTH] m0_addr; 
+	reg [`DATA_WIDTH] m0_wdata; 
+	wire [`DATA_WIDTH] m0_rdata_o; 
 	
-CoNM u_CoNM(
-	.clk(clk), 
-	.rst(rst), 
-	.sb_pc_inst(sb_pc_inst), 
-	.sb_csrgf_rdata(sb_csrgf_rdata), 
-	.pc_sb_inst_addr(pc_sb_inst_addr), 
+	reg rst; 
+	reg m1_un_sign; 
+	reg [`BYTE_SEL] m1_byte_mask; 
+	reg m1_re; 
+	reg m1_we; 
+	reg [`MEM_ADDR_WIDTH] m1_addr; 
+	reg [`DATA_WIDTH] m1_wdata; 
+	wire [`DATA_WIDTH] m1_rdata_o; 
 	
-	.extl_sb_un_sign_o(extl_sb_un_sign_o), 
-	.extl_sb_byte_mask_o(extl_sb_bybte_mask_o), 
-	.extl_sb_mem_re_o(extl_sb_mem_re_o), 
-	.extl_sb_mem_we_o(extl_sb_mem_we_o), 
-	.extl_sb_addr_o(extl_sb_addr_o), 
-	.extl_sb_mem_wdata_o(extl_sb_mem_wdata_o)
-	);
-	
+	reg [`DATA_WIDTH] s_rdata; 
+	wire s_rw_o; 
+	wire [`MEM_ADDR_WIDTH] s_addr_o; 
+	wire [`DATA_WIDTH] s_wdata_o; 
+
 sb u_sb(
 	.clk(clk), 
 	.rst(rst), 
@@ -48,4 +54,11 @@ sb u_sb(
 	.s_rw_o(s_rw_o), 
 	.s_addr_o(s_addr_o), 
 	.s_wdata_o(s_wdata_o)
-	); 
+	);
+	
+	initial begin
+		rst = `RST; 
+		#10; 
+		rst = 1'b1; 
+		
+		//

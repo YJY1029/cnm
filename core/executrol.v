@@ -124,13 +124,13 @@ module executrol(
 	assign alu_rslt = 
 		alu_add ? (op1+op2) : //15
 		alu_sub ? (op1-op2) : 
-		alu_sll ? (op1<<op2[4:0]) : 
-		alu_slt ? ($signed(op1)<$signed(op2)) : 
+		alu_sll ? (op1<<op2[4:0]) : //1, signed
+		alu_slt ? ($signed(op1)<$signed(op2)) : //1
 		alu_sltu ? (op1<op2) : 
 		alu_xor ? (op1^op2) : 
 		alu_srl ? (op1>>op2[4:0]) : 
-		alu_sra ? (op1>>>op2[4:0]) : 
-		alu_or ? (op1|op2) : 
+		alu_sra ? (op1>>>op2[4:0]) : //1
+		alu_or ? (op1|op2) : //1
 		alu_and ? (op1&op2) : 
 		32'h0; 
 	

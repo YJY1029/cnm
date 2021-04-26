@@ -139,14 +139,14 @@ module id_tb();
 		rs1_raddr_o = 5'b1
 		rs2_raddr_o = 5'b10
 		csr_raddr_o = 12'b100000000010
-		rd_waddr_o = 5'b00100
+		rd_waddr_o = 5'b00100		?0
 		imm_o = 32'b{20{1}}100000000100
 		op1_sel_o = 2'b1
 		op2_sel_o = 2'b11
 		alu_sel_o = 4'b1
 		br_sel_o = 3'b0
 		wb_sel_o = 3'b100
-		mem_rw_o = 2'b1
+		mem_rw_o = 2'b10
 		byte_sel_o = 4'b1
 		un_sign_o = 1
 		*/

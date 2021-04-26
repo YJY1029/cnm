@@ -124,12 +124,12 @@ module executrol(
 	assign alu_rslt = 
 		alu_add ? (op1+op2) : //15
 		alu_sub ? (op1-op2) : 
-		alu_sll ? (op1<<op2[4:0]) : 
-		alu_slt ? ($signed(op1)<$signed(op2)) : 
+		alu_sll ? (op1<<op2[4:0]) : //1, signed
+		alu_slt ? ($signed(op1)<$signed(op2)) : //1
 		alu_sltu ? (op1<op2) : 
 		alu_xor ? (op1^op2) : 
 		alu_srl ? (op1>>op2[4:0]) : 
-		alu_sra ? (op1>>>op2[4:0]) : 
+		alu_sra ? (op1>>>op2[4:0]) : //1
 		alu_or ? (op1|op2) : 
 		alu_and ? (op1&op2) : 
 		32'h0; 
@@ -183,13 +183,13 @@ module executrol(
 	assign byte_sel_o = byte_sel; 
 	assign un_sign_o = un_sign; 
 	
-	assign mem_raddr = 
+	assign mem_raddr_o = 
 		mem_re_o ? alu_rslt : 
 		32'h0; 
-	assign mem_waddr = 
+	assign mem_waddr_o = 
 		mem_we_o ? alu_rslt : 
 		32'h0; 
-	assign mem_wdata = 
+	assign mem_wdata_o = 
 		mem_we_o ? rs2_rdata : 
 		32'h0; 
 	
