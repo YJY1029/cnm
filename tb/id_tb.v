@@ -1,13 +1,13 @@
 `include "../core/defines.v"
 
 /*In this testbench we test instructions as follows: 
-I format: addi x32, x1, 32'b1
+I format: addi x31, x1, 32'b1
 B format: bge x1, x2, 32'b{19{1}1011111100000
-IL format: lh x32, 32'b11(x1)
+IL format: lh x31, 32'b11(x1)
 S format: sb x2, 32'b{20{1}}100000000100(x1)
-U format: lui x32, 32'b101
-U format: auipc x32, 32'b110
-J format: jalr x32, 32'b{20{1}}100000000111(x1)
+U format: lui x31, 32'b101
+U format: auipc x31, 32'b110
+J format: jalr x31, 32'b{20{1}}100000000111(x1)
 */
 module id_tb(); 
 
@@ -67,7 +67,7 @@ module id_tb();
 		
 		rst = 1'b1; 
 		
-		//10ns, I format: addi x32, x1, 32'b1
+		//10ns, I format: addi x31, x1, 32'b1
 		inst = 32'b00000000000100001000111110010011; 
 		//32'b000000000001/**/00001/**/000/**/11111/**/0010011
 		inst_addr = `INI_INST_ADDR; 
@@ -109,7 +109,7 @@ module id_tb();
 		*/
 		#10; 
 		
-		//30ns, IL format: lh x32, 32'b11(x1)
+		//30ns, IL format: lh x31, 32'b11(x1)
 		inst = 32'b00000000001100001001111110000011; 
 		//32'b00000000011/**/00001/**/001/**/11111/**/0000011
 		inst_addr = 32'b1000; 
@@ -152,7 +152,7 @@ module id_tb();
 		*/
 		#10; 
 		
-		//50ns, U format: lui x32, 32'b101{12{0}}
+		//50ns, U format: lui x31, 32'b101{12{0}}
 		inst = 32'b00000000000000000101111110110111; 
 		//32'b00000000000000000101/**/11111/**/0110111
 		inst_addr = 32'b10000; 
@@ -173,7 +173,7 @@ module id_tb();
 		*/
 		#10; 
 		
-		//60ns, U format: auipc x32, 32'b110{12{0}}
+		//60ns, U format: auipc x31, 32'b110{12{0}}
 		inst = 32'b00000000000000000110111110010111; 
 		//32'b00000000000000000110/**/11111/**/0010111
 		inst_addr = 32'b10100; 
@@ -194,7 +194,7 @@ module id_tb();
 		*/
 		#10; 
 		
-		//70ns, J format: jalr x32, 32'b{20{1}}100000000111(x1)
+		//70ns, J format: jalr x31, 32'b{20{1}}100000000111(x1)
 		inst = 32'b10000000011100001010111111100111; 
 		//32'b100000000111/**/00001/**/010/**/11111/**/1100111; 
 		inst_addr = 32'b11000; 

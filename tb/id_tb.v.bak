@@ -1,4 +1,4 @@
-`include "defines.v"
+`include "../core/defines.v"
 
 /*In this testbench we test instructions as follows: 
 I format: addi x32, x1, 32'b1

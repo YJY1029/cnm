@@ -1,4 +1,4 @@
-`include "defines.v"
+`include "../core/defines.v"
 
 module csregfile_tb(); 
 

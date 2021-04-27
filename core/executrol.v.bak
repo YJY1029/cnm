@@ -129,8 +129,8 @@ module executrol(
 		alu_sltu ? (op1<op2) : 
 		alu_xor ? (op1^op2) : 
 		alu_srl ? (op1>>op2[4:0]) : 
-		alu_sra ? (op1>>>op2[4:0]) : //1
-		alu_or ? (op1|op2) : 
+		alu_sra ? ({{31{op1[31]}}, 1'b0}<<(~op2[4:0])|(op1>>op2[4:0]) : //1
+		alu_or ? (op1|op2) : //1
 		alu_and ? (op1&op2) : 
 		32'h0; 
 	
@@ -152,7 +152,9 @@ module executrol(
 		(br_ltu & (op1 < op2)) | 
 		(br_geu & (op1 >= op2))) ? `JUMP : 
 		1'b0; 
-	assign jump_addr_o = inst_addr+{{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0}; //will jump_addr_o and jump_o cause timing problems? 
+	assign jump_addr_o = 
+		br_uncon ? ((inst_addr+imm)&32'b11111111111111111111111111111110) : 
+		(inst_addr+imm); //will jump_addr_o and jump_o cause timing problems? 
 		
 	//write back selection
 	assign wb_rd = (wb_sel == `WB_RD); 

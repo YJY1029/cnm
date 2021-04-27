@@ -32,7 +32,7 @@ module pc_tb();
 		
 	initial begin
 		rst = `RST; 
-		inst = 32'b1010101010100000100011110010011; //addi x32, x1, 101010101010
+		inst = 32'b1010101010100000100011110010011; //addi x31, x1, 101010101010
 		jump = 1'b0; 
 		jump_addr = `INI_INST_ADDR; 
 		hold = 1'b0; 
