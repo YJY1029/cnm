@@ -1,0 +1,98 @@
+/*
+op1_sel: imm, rs1
+op2_sel: none, inst_addr, rs2, 
+rd_waddr(rd_we)
+wb_sel: rd(alu_result), mem, u_type(pc+4), 
+mem_rw: read, write, none
+alu_sel: add, sub...
+br_sel: eq, lt, ge, ne, ltu, geu, uncon, none
+sl_byte_sel: b, hw, w, dw
+*/
+opcode:
+
+0110111: lui
+op1: imm, op2: none, wb_sel: rd(op1)
+
+0010111: auipc
+//op1: imm, op2: inst_addr, wb_sel: rd, alu_sel: add
+
+1101111: jal
+//op1: imm, op2: inst_addr, wb_sel: u_type, alu_sel: add, br_sel: unconditional, (jump_addr: op1+op2)
+
+1100111: jalr
+//op1: rs1, op2: inst_addr, wb_sel: u_type, alu_sel:add, br_sel: unconditional, (jump_addr: op1+op2)
+
+1100011: B format *6
+//op1: rs1, op2: rs2, wb_sel: none, alu_sel: sub, br_sel: depends (jump_addr: inst_addr+signed/unsigned imm(from inst))
+funct3:
+	000: beq
+	001: bne
+	100: blt
+	101: bge
+	110: bltU
+	111: bgeU
+
+0000011: I format *5 (load)
+//op1:rs1, op2:imm, wb_sel: rd(mem), alu_sel: add, mem_raddr: op1+op2, byte_sel: depends
+funct3:
+	000: lb
+	001: lh
+	010: lw
+	100: lbU
+	101: lhU
+
+0100011: S format *3
+//op1: rs1, op2: imm, wb_sel: mem, alu_sel: add, mem_waddr: op1+op2, mem_wdata: rs2, byte_sel: depends
+funct3: 
+	000: sb
+	001: sh
+	010: sw
+
+0010011: I format *9 (ALU immediate)
+//op1:rs1, op2: imm, wb_sel: rd, alu_sel: depends
+funct3: 
+	000: addi
+	010: slti
+	011: sltiU
+	100: xori
+	110: ori
+	111: andi
+	001: slli
+	101: funct7:
+		0000000: srli
+		0100000: srai
+
+0110011: R format *10
+//op1:rs1, op2:rs2, wb_sel:rd, alu_sel: depends
+funct3:
+	000:funct7:
+		0000000: add
+		0100000: sub
+	001: sll
+	010: slt
+	011: sltU
+	100: xor
+	101: funct7:
+		0000000: srl
+		0100000: sra
+	110: or
+	111: and
+
+0001111: FENCE *2
+funct3: 
+	000: fence
+	001: fence.i
+
+1110011: CSR*10
+funct3: 
+	000:inst[20]:
+		0: ecall
+		1: ebreak
+CSR
+//op1: rs1/imm, op2: none, wb_sel: csr, 
+	001: csrrw
+	010: csrrs
+	011: csrrc
+	101: csrrwi
+	110: csrrsi
+	111: csrrci

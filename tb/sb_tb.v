@@ -1,4 +1,4 @@
-`include "../core/defines.v"
+`include "../rtl/core/defines.v"
 
 module sb_tb(); 
 	
@@ -59,6 +59,6 @@ sb u_sb(
 	initial begin
 		rst = `RST; 
 		#10; 
-		rst = 1'b1; 
+		rst = `UNRST; 
 		
 		//

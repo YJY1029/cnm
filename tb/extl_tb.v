@@ -1,4 +1,4 @@
-`include "../core/defines.v"
+`include "../rtl/core/defines.v"
 
 module extl_tb(); 
 
@@ -82,7 +82,7 @@ executrol u_extl(
 	initial begin
 		rst = `RST; 
 		#10; 
-		rst = 1'b1; 
+		rst = `UNRST; 
 		
 		//10ns, addi x31, x1, 32'b1
 		inst = 32'b00000000000100001000111110010011; 

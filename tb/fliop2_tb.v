@@ -1,4 +1,4 @@
-`include "../core/defines.v"
+`include "../rtl/core/defines.v"
 
 module fliop2_tb(); 
 
@@ -87,7 +87,7 @@ fliop2 u_fliop2(
 	initial begin
 		rst = `RST; 
 		#10; 
-		rst = 1'b1; 
+		rst = `UNRST; 
 		
 		//addi x31, x1, 32'b1
 		inst = 32'b00000000000100001000111110010011; 
