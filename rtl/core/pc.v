@@ -1,6 +1,7 @@
 `include "defines.v"
 
 module pc(
+	input wire clk, 
 	input wire rst, 
 	
 	input wire [`INST_WIDTH] inst, //0
@@ -13,7 +14,7 @@ module pc(
 	output wire [`INST_WIDTH] inst_o
 	);
 	
-	assign inst_o = inst; //1
+	assign inst_o = inst; 
 	
 	always @ (posedge clk) begin
 		if (rst == `RST) begin

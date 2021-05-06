@@ -57,16 +57,16 @@ module csregfile(
 	always @ (*) begin
 		//reading rs1
 		if (rs1_raddr == `ZERO_REG) begin
-			rs1_rdata_o = 32'h0; 
+			rs1_rdata_o = `ZERO32; 
 		end else if (rs1_raddr == rd_waddr) begin
 			rs1_rdata_o = (extl_rd_wdata|sb_rd_wdata); 
 		end else begin
-			rs1_rdata_o = regs[rs1_raddr];//12
+			rs1_rdata_o = regs[rs1_raddr];
 		end
 		
 		//reading rs2
 		if (rs2_raddr == `ZERO_REG) begin
-			rs2_rdata_o = 32'h0; 
+			rs2_rdata_o = `ZERO32; 
 		end else if (rs2_raddr == rd_waddr) begin
 			rs2_rdata_o = (extl_rd_wdata|sb_rd_wdata); 
 		end else begin
@@ -114,7 +114,7 @@ module csregfile(
 					csr_rdata_o = mvendorid; 
 				end
 				default: begin
-				
+				    csr_rdata_o = `ZERO32; 
 				end
 			endcase
 		end	
@@ -124,24 +124,24 @@ module csregfile(
 	//write, on positive edges of clk
 	always @ (posedge clk) begin
 		if (rst == `RST) begin //initialization
-			cycle <= {32'h0, 32'h0}; 
-			mstatus <= 32'h0; 
+			cycle <= {`ZERO32, `ZERO32}; 
+			mstatus <= `ZERO32; 
 			misa <= 32'h40020000; //Meaning RV32I
-			mtvec <= 32'h0; //trap address, revision needed
-			mscratch <= 32'h0; //exception related
-			mepc <= 32'h0; //ditto
-			//mcause <= 32'h0; //ditto
-			//mtval <= 32'h0; //ditto
-			//mip <= 32'h0; //pending related
-			mcycle <= 32'h0; 
-			mcycleh <= 32'h0; 
+			mtvec <= `ZERO32; //trap address, revision needed
+			mscratch <= `ZERO32; //exception related
+			mepc <= `ZERO32; //ditto
+			//mcause <= `ZERO32; //ditto
+			//mtval <= `ZERO32; //ditto
+			//mip <= `ZERO32; //pending related
+			mcycle <= `ZERO32; 
+			mcycleh <= `ZERO32; 
 			mvendorid <= 32'h13109f5; //Awesome you found an easter egg! In decimal form it's my birthday :-)
 		end else begin
 			cycle <= cycle+1'b1; 
 			
 			//writing rd
 			if (rd_waddr != `ZERO_REG) begin 
-				regs[rd_waddr] <= (extl_rd_wdata|sb_rd_wdata); //17
+				regs[rd_waddr] <= (extl_rd_wdata|sb_rd_wdata); 
 				
 			end else if (csr_waddr != `mdisable) begin
 				case (csr_waddr)
@@ -185,4 +185,5 @@ module csregfile(
 			end
 		end
 	end
+	
 endmodule

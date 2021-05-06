@@ -55,7 +55,7 @@ module id(
 	wire b_format = (opcode == `B_FORMAT); 
 	wire il_format = (opcode == `IL_FORMAT); 
 	wire s_format = (opcode == `S_FORMAT); 
-	wire i_format = (opcode == `I_FORMAT); //2
+	wire i_format = (opcode == `I_FORMAT); 
 	wire r_format = (opcode == `R_FORMAT); 
 	wire fence_fencei = (opcode == `FENCE_FENCEI); 
 	wire csr = (opcode == `CSR); 
@@ -81,7 +81,7 @@ module id(
 	wire sw = s_format & (funct3 == `SW); 
 	
 	//I format 
-	wire addi = i_format & (funct3 == `ADDI); //3
+	wire addi = i_format & (funct3 == `ADDI); 
 	wire slti = i_format & (funct3 == `SLTI); 
 	wire sltiu = i_format & (funct3 == `SLTIU); 
 	wire xori = i_format & (funct3 == `XORI); 
@@ -123,9 +123,9 @@ module id(
 	wire ebreak = (inst == `EBREAK); 
 	
 	//to csregfile
-	assign rs1_raddr_o = rs1;//4
+	assign rs1_raddr_o = rs1;
 		
-	assign rs2_raddr_o = rs2;//5
+	assign rs2_raddr_o = rs2;
 		
 	assign csr_raddr_o = inst[31:20]; 
 		
@@ -136,7 +136,7 @@ module id(
 	
 	assign rd_waddr_o = 
 		(lui | auipc | jal | jalr | il_format | i_format | r_format | csr) ? rd : //should this be omitted also? 
-		//6
+		
 		`ZERO_REG; 
 		
 	assign csr_waddr_o = inst[31:20]; 
@@ -146,14 +146,14 @@ module id(
 		jal ? {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0} : 
 		jalr ? {{20{inst[31]}}, inst[31:20]} : 
 		(b_format) ? {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0} : 
-		(i_format | il_format) ? {{20{inst[31]}}, inst[31:20]} : //7
+		(i_format | il_format) ? {{20{inst[31]}}, inst[31:20]} : 
 		s_format ? {{20{inst[31]}}, inst[31:25], inst[11:7]} : 
 		//csr ? 
-		32'h0; 
+		`ZERO32; 
 		//priviledged part from here on not finished
 		
 	assign alu_sel_o = 
-		(lui | auipc | jal | jalr | il_format | s_format | addi | add) ? `ALU_ADD : //8
+		(lui | auipc | jal | jalr | il_format | s_format | addi | add) ? `ALU_ADD : 
 		(b_format | sub) ? `ALU_SUB : 
 		(slli | sll) ? `ALU_SLL : 
 		(slti | sltiu | slt | sltu) ? `ALU_SLT : 
@@ -165,14 +165,14 @@ module id(
 		`ALU_NOP; 
 		
 	assign op1_sel_o = 
-		(jalr | b_format | il_format | s_format | i_format | r_format | fence_fencei | csrrw | csrrs | csrrc) ? `OP1_RS1 : //9
+		(jalr | b_format | il_format | s_format | i_format | r_format | fence_fencei | csrrw | csrrs | csrrc) ? `OP1_RS1 : 
 		(lui | auipc | jal | csrrwi | csrrsi | csrrci) ? `OP1_IMM : 
 		`OP1_NONE; 
 	
 	assign op2_sel_o = 
 		(b_format | r_format) ? `OP2_RS2 : 
 		(auipc | jal | jalr) ? `OP2_INST_ADDR : 
-		(il_format | s_format | i_format) ? `OP2_IMM : //10
+		(il_format | s_format | i_format) ? `OP2_IMM : 
 		`OP2_NONE; 
 	
 	assign mem_rw_o = 
@@ -189,7 +189,7 @@ module id(
 		`BR_DISABLE; 
 	
 	assign wb_sel_o = 
-		(lui | auipc | i_format | r_format | fence_fencei) ? `WB_RD : //11
+		(lui | auipc | i_format | r_format | fence_fencei) ? `WB_RD : 
 		(jal | jalr) ? `WB_J_TYPE : 
 		il_format ? `WB_IL_TYPE : 
 		s_format ? `WB_MEM : 

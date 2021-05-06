@@ -1,15 +1,22 @@
+`define ZERO32             32'h0
 `define DATA_WIDTH			  31:0
                               
 //General flags               
 `define RST               1'b0
+`define UNRST             1'b1
 `define JUMP              1'b1
+`define UNJUMP            1'b0
 `define HOLD              1'b1
+`define UNHOLD            1'b0
 `define WRITE_ENABLE	    1'b1
+`define WRITE_DISABLE     1'b0
+`define READ_ENABLE       1'b0
+`define READ_DISABLE      1'b0
                               
 //Instruction parameters                
 `define INST_WIDTH		    31:0
 `define INST_ADDR_WIDTH   31:0
-`define INI_INST_ADDR    32'h0
+`define INI_INST_ADDR    `ZERO32
                              
 //General integer register       
 `define REG_NUM					    32 
@@ -17,6 +24,7 @@
 `define ZERO_REG 			    5'h0
 
 //MEM
+`define MEM_NUM           4096
 `define MEM_ADDR_WIDTH    31:0  //?
 
 //Op1 and op2 selection signals
@@ -52,8 +60,6 @@
 `define BR_NE           3'b011
 `define BR_LT           3'b100
 `define BR_GE           3'b101
-`define BR_LTU          3'b110
-`define BR_GEU          3'b111
 
 //Writeback selection signals
 `define WB_SEL             2:0

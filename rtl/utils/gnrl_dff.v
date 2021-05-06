@@ -1,4 +1,4 @@
-module gnrl_dff # (
+module gnrl_dff #(
 	parameter DW = 32
 )(
 	input clk, 
@@ -14,7 +14,7 @@ module gnrl_dff # (
 	
 	always @ (posedge clk or negedge rst) begin
 		if (!rst | hold) begin 
-			qout_r <= de_val; 
+			qout_r <= dis_val; 
 		end else begin
 			qout_r <= din; 
 		end

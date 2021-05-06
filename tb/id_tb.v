@@ -1,4 +1,4 @@
-`include "../core/defines.v"
+`include "../rtl/core/defines.v"
 
 /*In this testbench we test instructions as follows: 
 I format: addi x31, x1, 32'b1
@@ -65,7 +65,7 @@ module id_tb();
 		rst = `RST; 
 		#10; 
 		
-		rst = 1'b1; 
+		rst = `UNRST; 
 		
 		//10ns, I format: addi x31, x1, 32'b1
 		inst = 32'b00000000000100001000111110010011; 

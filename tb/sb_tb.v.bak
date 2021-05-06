@@ -1,4 +1,4 @@
-`include "../core/defines.v"
+`include "../rtl/core/defines.v"
 
 module sb_tb(); 
 	
@@ -29,7 +29,7 @@ module sb_tb();
 	reg [`DATA_WIDTH] s_rdata; 
 	wire s_rw_o; 
 	wire [`MEM_ADDR_WIDTH] s_addr_o; 
-	
+	wire [`DATA_WIDTH] s_wdata_o; 
 
 sb u_sb(
 	.clk(clk), 

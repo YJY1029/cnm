@@ -61,15 +61,15 @@ module fliop2(
 	assign csr_waddr_o = csr_waddr_r; 
 	
 	wire [`DATA_WIDTH] imm_r; 
-	gnrl_dff #(32) imm_dff(clk, rst, hold, 32'h0, imm, imm_r); 
+	gnrl_dff #(32) imm_dff(clk, rst, hold, `ZERO32, imm, imm_r); 
 	assign imm_o = imm_r; 
 	
 	wire [`OP1_SEL] op1_sel_r; 
-	gnrl_dff #(2) op1_sel_dff(clk, rst, hold, `ZERO_REG, op1_sel, op1_sel_r); 
+	gnrl_dff #(2) op1_sel_dff(clk, rst, hold, `OP1_NONE, op1_sel, op1_sel_r); 
 	assign op1_sel_o = op1_sel_r; 
 	
 	wire [`OP2_SEL] op2_sel_r; 
-	gnrl_dff #(2) op2_sel_dff(clk, rst, hold, `ZERO_REG, op2_sel, op2_sel_r); 
+	gnrl_dff #(2) op2_sel_dff(clk, rst, hold, `OP2_NONE, op2_sel, op2_sel_r); 
 	assign op2_sel_o = op2_sel_r; 
 	
 	wire [`ALU_SEL] alu_sel_r; 
@@ -84,12 +84,12 @@ module fliop2(
 	gnrl_dff #(3) wb_sel_dff(clk, rst, hold, `WB_NONE, wb_sel, wb_sel_r); 
 	assign wb_sel_o = wb_sel_r; 
 	
-	wire mem_rw_r; 
+	wire [`MEM_RW] mem_rw_r; 
 	gnrl_dff #(2) mem_rw_dff(clk, rst, hold, `MEM_DISABLE, mem_rw, mem_rw_r); 
 	assign mem_rw_o = mem_rw_r; 
 	
 	wire [`BYTE_SEL] byte_sel_r; 
-	gnrl_dff #(2) byte_sel_dff(clk, rst, hold, `SL_NONE, byte_sel, byte_sel_r); 
+	gnrl_dff #(4) byte_sel_dff(clk, rst, hold, `SL_NONE, byte_sel, byte_sel_r); 
 	assign byte_sel_o = byte_sel_r; 
 	
 	wire un_sign_r; 
@@ -97,15 +97,15 @@ module fliop2(
 	assign un_sign_o = un_sign_r; 
 	
 	wire [`DATA_WIDTH] rs1_rdata_r; 
-	gnrl_dff #(32) rs1_rdata_dff(clk, rst, hold, 32'h0, rs1_rdata, rs1_rdata_r); 
+	gnrl_dff #(32) rs1_rdata_dff(clk, rst, hold, `ZERO32, rs1_rdata, rs1_rdata_r); 
 	assign rs1_rdata_o = rs1_rdata_r; 
 	
 	wire [`DATA_WIDTH] rs2_rdata_r; 
-	gnrl_dff #(32) rs2_rdata_dff(clk, rst, hold, 32'h0, rs2_rdata, rs2_rdata_r); 
+	gnrl_dff #(32) rs2_rdata_dff(clk, rst, hold, `ZERO32, rs2_rdata, rs2_rdata_r); 
 	assign rs2_rdata_o = rs2_rdata_r; 
 	
 	wire [`DATA_WIDTH] csr_rdata_r; 
-	gnrl_dff #(32) csr_rdata_dff(clk, rst, hold, 32'h0, csr_rdata, csr_rdata_r); 
+	gnrl_dff #(32) csr_rdata_dff(clk, rst, hold, `ZERO32, csr_rdata, csr_rdata_r); 
 	assign csr_rdata_o = csr_rdata_r; 
 	
 endmodule

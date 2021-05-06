@@ -1,4 +1,4 @@
-`include "../core/defines.v"
+`include "../rtl/core/defines.v"
 
 //All testbenches are based on addi x31, x1, 12'b101010101010
 module pc_tb(); 
@@ -38,7 +38,7 @@ module pc_tb();
 		hold = 1'b0; 
 		#10; //Reset
 		
-		rst = 1'b1; 
+		rst = `UNRST; 
 		#10; //Nothing happens, pc+=4
 		
 		hold = `HOLD; 

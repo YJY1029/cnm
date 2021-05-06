@@ -1,4 +1,4 @@
-`include "../core/defines.v"
+`include "../rtl/core/defines.v"
 
 module csregfile_tb(); 
 
@@ -43,7 +43,7 @@ csregfile u_csregfile(
 		rst = `RST; 
 		#10; 
 		
-		rst = 1'b1; 
+		rst = `UNRST; 
 		
 		//10ns, rd write
 		rd_waddr = `ZERO_REG; 

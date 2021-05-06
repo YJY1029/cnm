@@ -1,4 +1,4 @@
-`include "../core/defines.v"
+`include "../rtl/core/defines.v"
 
 module extl_tb(); 
 
@@ -269,7 +269,7 @@ executrol u_extl(
 		mem_rw = 2'b0; 
 		byte_sel = 4'b0; 
 		un_sign = 1'b1; 
-		rs1_rdata = {1'b1, {31{1'b0}}}; 
+		rs1_rdata = {1'b1, {29{1'b0}}, 2'b11}; 
 		rs2_rdata = 32'b1; 
 		csr_rdata = 32'b10; 
 		#10; 

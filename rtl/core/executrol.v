@@ -94,20 +94,20 @@ module executrol(
 	assign op1_imm = (op1_sel == `OP1_IMM); 
 	assign op1_none = (op1_sel == `OP1_NONE); 
 	assign op1 = 
-		op1_rs1 ? rs1_rdata : //13
+		op1_rs1 ? rs1_rdata : 
 		op1_imm ? imm : 
-		32'h0; 
+		`ZERO32; 
 	
 	//op2 selection
 	assign op2_rs2 = (op2_sel == `OP2_RS2); 
 	assign op2_inst_addr = (op2_sel == `OP2_INST_ADDR); 
-	assign op2_imm = (op2_sel == `OP2_IMM); //14
+	assign op2_imm = (op2_sel == `OP2_IMM); 
 	assign op2_none = (op2_sel == `OP2_NONE); 
 	assign op2 = 
 		op2_rs2 ? rs2_rdata : 
 		op2_inst_addr ? inst_addr : 
 		op2_imm ? imm : 
-		32'h0; 
+		`ZERO32; 
 	
 	//ALU operation
 	assign alu_add = (alu_sel == `ALU_ADD); 
@@ -122,17 +122,17 @@ module executrol(
 	assign alu_and = (alu_sel == `ALU_AND); 
 	assign alu_nop = (alu_sel == `ALU_NOP); 
 	assign alu_rslt = 
-		alu_add ? (op1+op2) : //15
+		alu_add ? (op1+op2) : 
 		alu_sub ? (op1-op2) : 
-		alu_sll ? (op1<<op2[4:0]) : //1, signed
-		alu_slt ? ($signed(op1)<$signed(op2)) : //1
+		alu_sll ? (op1<<op2[4:0]) : 
+		alu_slt ? ($signed(op1)<$signed(op2)) : 
 		alu_sltu ? (op1<op2) : 
 		alu_xor ? (op1^op2) : 
 		alu_srl ? (op1>>op2[4:0]) : 
-		alu_sra ? ({{31{op1[31]}}, 1'b0}<<(~op2[4:0])|(op1>>op2[4:0])) : //1
-		alu_or ? (op1|op2) : //1
+		alu_sra ? ({{31{op1[31]}}, 1'b0}<<(~op2[4:0])|(op1>>op2[4:0])) : 
+		alu_or ? (op1|op2) : 
 		alu_and ? (op1&op2) : 
-		32'h0; 
+		`ZERO32; 
 	
 	//branch selection
 	assign br_uncon = (br_sel == `BR_UNCON); 
@@ -151,7 +151,7 @@ module executrol(
 		(br_ge & ($signed(op1) >= $signed(op2))) | 
 		(br_ltu & (op1 < op2)) | 
 		(br_geu & (op1 >= op2))) ? `JUMP : 
-		1'b0; 
+		`UNJUMP; 
 	assign jump_addr_o = 
 		br_uncon ? ((inst_addr+imm)&32'b11111111111111111111111111111110) : 
 		(inst_addr+imm); //will jump_addr_o and jump_o cause timing problems? 
@@ -165,19 +165,19 @@ module executrol(
 	assign wb_none = (wb_sel == `WB_NONE); //not functioning
 	
 	assign rd_waddr_o = 
-		(wb_rd | wb_j_type | wb_il_type) ? rd_waddr : //16
+		(wb_rd | wb_j_type | wb_il_type) ? rd_waddr : 
 		`ZERO_REG; 
 	assign rd_wdata_o = 
-		wb_rd ? alu_rslt : //16
+		wb_rd ? alu_rslt : 
 		wb_j_type ? (inst_addr+32'h4) : 
-		32'h0; 
+		`ZERO32; 
 	
 	assign csr_waddr_o = 
 		wb_csr ? csr_waddr : 
 		`mdisable; 
 	assign csr_wdata_o = 
 		wb_csr ? alu_rslt : 
-		32'h0; 
+		`ZERO32; 
 	
 	//mem read or write selection  
 	assign mem_re_o = (mem_rw == `MEM_READ); 
@@ -187,12 +187,12 @@ module executrol(
 	
 	assign mem_raddr_o = 
 		mem_re_o ? alu_rslt : 
-		32'h0; 
+		`ZERO32; 
 	assign mem_waddr_o = 
 		mem_we_o ? alu_rslt : 
-		32'h0; 
+		`ZERO32; 
 	assign mem_wdata_o = 
 		mem_we_o ? rs2_rdata : 
-		32'h0; 
+		`ZERO32; 
 	
 endmodule
