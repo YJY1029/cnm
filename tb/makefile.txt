@@ -1,0 +1,1 @@
+vopt +acc CoNM_soc_tb -o CoNM_soc_tb_opt; vsim CoNM_soc_tb_opt; add wave -position insertpoint sim:/CoNM_soc_tb/*; add wave -position insertpoint sim:/CoNM_soc_tb/soc/*

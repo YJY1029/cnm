@@ -1,7 +1,7 @@
 `include "../rtl/core/defines.v"
 `define REGS soc.u_CoNM.u_csregfile.regs
 
-module CoNM_soc_tb(); 
+module _soc_tb(); 
 	
 	//Clock signal
 	localparam clk_period = 100; 
@@ -25,7 +25,7 @@ CoNM_soc_top soc(
 	
 	//read mem data
 	initial begin
-		$readmemh("D:/Work/GraduationP/conm/tb/inst.data", soc.imem.mem_unit); 
+		$readmemh("D:/Work/GraduationP/conm/tb/rv32ui-p-addi.verilog", soc.imem.mem_unit); 
 	end
 	
 	//general test benchmark
@@ -35,10 +35,7 @@ CoNM_soc_top soc(
 		#200; 
 		rst = `UNRST; 
 		#1000; 
-		
-		wait (x26 == 32'b1); 
-		#10000; 
-		if (x27 == 32'b1) begin 
+		if (x3 == 32'b1) begin 
 			$display("~~~~~~~~~~~~~~~~~~~ TEST_PASS ~~~~~~~~~~~~~~~~~~~"); 
 			$display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"); 
 			$display("~~~~~~~~~ #####     ##     ####    #### ~~~~~~~~~"); 
@@ -75,7 +72,7 @@ CoNM_soc_top soc(
 	//generate wave file
 	initial begin
 		$dumpfile("CoNM_soc_tb.vcd"); 
-		$dumpvars(0, CoNM_soc_tb); 
+		$dumpvars(0, _soc_tb); 
 	end
 	
 endmodule

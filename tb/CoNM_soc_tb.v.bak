@@ -26,7 +26,6 @@ CoNM_soc_top soc(
 	//read mem data
 	initial begin
 		$readmemh("D:/Work/GraduationP/conm/tb/inst.data", soc.imem.mem_unit); 
-		
 	end
 	
 	//general test benchmark
@@ -38,7 +37,7 @@ CoNM_soc_top soc(
 		#1000; 
 		
 		wait (x26 == 32'b1); 
-		#500; 
+		#1000; 
 		if (x27 == 32'b1) begin 
 			$display("~~~~~~~~~~~~~~~~~~~ TEST_PASS ~~~~~~~~~~~~~~~~~~~"); 
 			$display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"); 
