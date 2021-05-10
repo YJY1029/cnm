@@ -217,7 +217,7 @@ executrol u_extl(
 		csr_rdata = 32'b1; 
 		#10; 
 		
-		//80ns, jal x31, 32'b{12{1}}10000000000000000111, 10000000111000000000111111101111
+		//80ns, jal x31, 32'b{12{1}}10000000000000000111
 		inst = 32'b10000000111000000000111111101111; 
 		inst_addr = 32'b11100; 
 		rd_waddr = 5'b11111; 
@@ -289,7 +289,7 @@ executrol u_extl(
 		byte_sel = 4'b0; 
 		un_sign =1'b1; 
 		rs1_rdata = 32'b11; 
-		rs2_rdata = 32'b10; 
+		rs2_rdata = 32'b11; 
 		csr_rdata = 32'b1; 
 		#10; 
 		

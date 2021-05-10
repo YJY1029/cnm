@@ -30,10 +30,12 @@ module sb(
 	output reg [`MEM_ADDR_WIDTH] s_addr_o, 
 	output reg [`DATA_WIDTH] s_wdata_o 
 	); 
-	//input
+	
 	always @ (*) begin
 		m0_rdata_o = `ZERO32; 
 		m1_rdata_o = `ZERO32; 
+		s_rw_o = 1'b0; 
+		s_addr_o = `ZERO32; 
 		s_wdata_o = `ZERO32; 
 		
 		if (m0_re) begin

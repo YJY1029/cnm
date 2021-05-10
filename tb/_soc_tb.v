@@ -4,7 +4,7 @@
 module _soc_tb(); 
 	
 	//Clock signal
-	localparam clk_period = 100; 
+	localparam clk_period = 20; 
 	reg clk; 
 	initial clk = 1'b0; 
 	always #(clk_period/2) clk = ~clk; 
@@ -12,7 +12,6 @@ module _soc_tb();
 	reg rst; 
 	
 	wire [`DATA_WIDTH] x3 = `REGS[3]; 
-	wire [`DATA_WIDTH] x10 = `REGS[10]; 
 	wire [`DATA_WIDTH] x26 = `REGS[26]; 
 	wire [`DATA_WIDTH] x27 = `REGS[27]; 
 	
@@ -32,9 +31,9 @@ CoNM_soc_top soc(
 	initial begin
 		rst = `RST; 
 		$display("Here comes the test!");
-		#200; 
+		#40; 
 		rst = `UNRST; 
-		#1000; 
+		#200; 
 		if (x3 == 1) begin 
 			$display("~~~~~~~~~~~~~~~~~~~ TEST_PASS ~~~~~~~~~~~~~~~~~~~"); 
 			$display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"); 

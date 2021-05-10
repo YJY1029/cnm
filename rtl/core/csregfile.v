@@ -54,20 +54,20 @@ module csregfile(
 	reg [`DATA_WIDTH] mvendorid; 
 	
 	//read
-	always @ (*) begin
+	always @ (*) begin 
 		//reading rs1
-		if (rs1_raddr == `ZERO_REG) begin
+		if (rs1_raddr == `ZERO_REG) begin 
 			rs1_rdata_o = `ZERO32; 
-		end else if (rs1_raddr == rd_waddr) begin
+		end else if (rs1_raddr == rd_waddr) begin 
 			rs1_rdata_o = (extl_rd_wdata|sb_rd_wdata); 
-		end else begin
-			rs1_rdata_o = regs[rs1_raddr];
+		end else begin 
+			rs1_rdata_o = regs[rs1_raddr]; 
 		end
 		
 		//reading rs2
-		if (rs2_raddr == `ZERO_REG) begin
+		if (rs2_raddr == `ZERO_REG) begin 
 			rs2_rdata_o = `ZERO32; 
-		end else if (rs2_raddr == rd_waddr) begin
+		end else if (rs2_raddr == rd_waddr) begin 
 			rs2_rdata_o = (extl_rd_wdata|sb_rd_wdata); 
 		end else begin
 			rs2_rdata_o = regs[rs2_raddr];
@@ -114,7 +114,7 @@ module csregfile(
 					csr_rdata_o = mvendorid; 
 				end
 				default: begin
-				    csr_rdata_o = `ZERO32; 
+				  csr_rdata_o = `ZERO32; 
 				end
 			endcase
 		end	

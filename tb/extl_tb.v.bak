@@ -82,7 +82,7 @@ executrol u_extl(
 	initial begin
 		rst = `RST; 
 		#10; 
-		rst = 1'b1; 
+		rst = `UNRST; 
 		
 		//10ns, addi x31, x1, 32'b1
 		inst = 32'b00000000000100001000111110010011; 
@@ -289,7 +289,7 @@ executrol u_extl(
 		byte_sel = 4'b0; 
 		un_sign =1'b1; 
 		rs1_rdata = 32'b11; 
-		rs2_rdata = 32'b10; 
+		rs2_rdata = 32'b11; 
 		csr_rdata = 32'b1; 
 		#10; 
 		

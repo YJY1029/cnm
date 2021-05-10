@@ -45,17 +45,18 @@ module executrol(
 	output wire [`INST_ADDR_WIDTH] jump_addr_o
 	); 
 	
+	wire op1_none;
 	wire op1_rs1; 
 	wire op1_imm; 
-	wire op1_none;
 	wire [`DATA_WIDTH] op1;
 	
+	wire op2_none; 
 	wire op2_rs2; 
 	wire op2_inst_addr; 
 	wire op2_imm; 
-	wire op2_none; 
 	wire [`DATA_WIDTH] op2; 
 	
+	wire alu_nop; 
 	wire alu_add; 
 	wire alu_sub; 
 	wire alu_sll; 
@@ -66,9 +67,9 @@ module executrol(
 	wire alu_sra; 
 	wire alu_or; 
 	wire alu_and; 
-	wire alu_nop; 
 	wire [`DATA_WIDTH] alu_rslt; 
 	
+	wire br_disable; 
 	wire br_uncon; 
 	wire br_eq; 
 	wire br_ne; 
@@ -76,33 +77,32 @@ module executrol(
 	wire br_ge; 
 	wire br_ltu; 
 	wire br_geu; 
-	wire br_disable; 
 	
+	wire wb_none; 
 	wire wb_rd; 
 	wire wb_j_type; 
 	wire wb_mem; 
 	wire wb_csr; 
-	wire wb_none; 
 	
+	wire sl_none; 
 	wire sl_byte; 
 	wire sl_halfword; 
 	wire sl_word; 
-	wire sl_none; 
 	
 	//op1 selection
+	assign op1_none = (op1_sel == `OP1_NONE); 
 	assign op1_rs1 = (op1_sel == `OP1_RS1); 
 	assign op1_imm = (op1_sel == `OP1_IMM); 
-	assign op1_none = (op1_sel == `OP1_NONE); 
 	assign op1 = 
 		op1_rs1 ? rs1_rdata : 
 		op1_imm ? imm : 
 		`ZERO32; 
 	
 	//op2 selection
+	assign op2_none = (op2_sel == `OP2_NONE); 
 	assign op2_rs2 = (op2_sel == `OP2_RS2); 
 	assign op2_inst_addr = (op2_sel == `OP2_INST_ADDR); 
 	assign op2_imm = (op2_sel == `OP2_IMM); 
-	assign op2_none = (op2_sel == `OP2_NONE); 
 	assign op2 = 
 		op2_rs2 ? rs2_rdata : 
 		op2_inst_addr ? inst_addr : 
@@ -110,6 +110,7 @@ module executrol(
 		`ZERO32; 
 	
 	//ALU operation
+	assign alu_nop = (alu_sel == `ALU_NOP); 
 	assign alu_add = (alu_sel == `ALU_ADD); 
 	assign alu_sub = (alu_sel == `ALU_SUB); 
 	assign alu_sll = (alu_sel == `ALU_SLL); 
@@ -120,7 +121,6 @@ module executrol(
 	assign alu_sra = (alu_sel == `ALU_SRA); 
 	assign alu_or = (alu_sel == `ALU_OR); 
 	assign alu_and = (alu_sel == `ALU_AND); 
-	assign alu_nop = (alu_sel == `ALU_NOP); 
 	assign alu_rslt = 
 		alu_add ? (op1+op2) : 
 		alu_sub ? (op1-op2) : 
@@ -135,6 +135,7 @@ module executrol(
 		`ZERO32; 
 	
 	//branch selection
+	assign br_disable = (br_sel == `BR_DISABLE); 
 	assign br_uncon = (br_sel == `BR_UNCON); 
 	assign br_eq = (br_sel == `BR_EQ); 
 	assign br_ne = (br_sel == `BR_NE); 
@@ -142,7 +143,8 @@ module executrol(
 	assign br_ge = (br_sel == `BR_GE); 
 	assign br_ltu = (br_sel == `BR_LT) & (un_sign == `UNSIGNED); 
 	assign br_geu = (br_sel == `BR_GE) & (un_sign == `UNSIGNED); 
-	assign br_disable = (br_sel == `BR_DISABLE); 
+	
+	assign hold_o = ~br_disable; 
 	assign jump_o = 
 		(br_uncon | 
 		(br_eq & (op1 == op2)) | 
