@@ -23,8 +23,7 @@ module CoNM(
 	wire [`DATA_WIDTH] extl_csrgf_rd_wdata; 
 	wire [`CSR_ADDR_WIDTH] extl_csrgf_csr_waddr; 
 	wire [`DATA_WIDTH] extl_csrgf_csr_wdata; 
-	wire extl_hold; 
-	wire extl_pc_jump; 
+	wire extl_jump; 
 	wire [`INST_ADDR_WIDTH] extl_pc_jump_addr; 
 	
 	//in pipeline stage order
@@ -38,10 +37,9 @@ module CoNM(
 		.inst(imem_pc_inst), 
 		.jump(extl_pc_jump), 
 		.jump_addr(extl_pc_jump_addr), 
-		.hold(extl_hold), 
 		
 		.pc_o(pc_f1_inst_addr), 
-		.inst_o(pc_f1_inst)//this might not be right, considering using fliop1 as ir
+		.inst_o(pc_f1_inst)
 	);
 	
 	wire [`INST_WIDTH] f1_id_inst; 
@@ -50,7 +48,7 @@ module CoNM(
 		.clk(clk), 
 		.rst(rst), 
 		
-		.hold(extl_hold), 
+		.flush(extl_jump), 
 		.inst(pc_f1_inst), 
 		.inst_addr(pc_f1_inst_addr), 
 		
@@ -139,7 +137,7 @@ module CoNM(
 		.clk(clk), 
 		.rst(rst), 
 		
-		.hold(extl_hold), 
+		.flush(extl_jump), 
 		.inst(id_f2_inst), 
 		.inst_addr(id_f2_inst_addr), 
 		.rd_waddr(id_f2_rd_waddr), 
@@ -212,7 +210,6 @@ module CoNM(
 		.mem_we_o(extl_sb_mem_we_o), 
 		.mem_waddr_o(extl_sb_mem_waddr), 
 		.mem_wdata_o(extl_sb_mem_wdata_o), 
-		.hold_o(extl_hold), 
 		.jump_o(extl_pc_jump), 
 		.jump_addr_o(extl_pc_jump_addr)
 	);

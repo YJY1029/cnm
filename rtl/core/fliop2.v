@@ -3,7 +3,7 @@
 module fliop2( 
 	input clk, 
 	input rst, 
-	input hold, 
+	input flush, 
 	
 	//from id
 	input wire [`INST_WIDTH] inst, 
@@ -45,67 +45,67 @@ module fliop2(
 	); 
 	
 	wire [`INST_WIDTH] inst_r; 
-	gnrl_dff #(32) inst_dff(clk, rst, hold, `NOP, inst, inst_r); 
+	gnrl_dff #(32) inst_dff(clk, rst, flush, `NOP, inst, inst_r); 
 	assign inst_o = inst_r; 
 	
 	wire [`INST_ADDR_WIDTH] inst_addr_r; 
-	gnrl_dff #(32) inst_addr_dff(clk, rst, hold, `INI_INST_ADDR, inst_addr, inst_addr_r); 
+	gnrl_dff #(32) inst_addr_dff(clk, rst, flush, `INI_INST_ADDR, inst_addr, inst_addr_r); 
 	assign inst_addr_o = inst_addr_r; 
 	
 	wire [`REG_ADDR_WIDTH] rd_waddr_r; 
-	gnrl_dff #(5) rd_waddr_dff(clk, rst, hold, `ZERO_REG, rd_waddr, rd_waddr_r); 
+	gnrl_dff #(5) rd_waddr_dff(clk, rst, flush, `ZERO_REG, rd_waddr, rd_waddr_r); 
 	assign rd_waddr_o = rd_waddr_r; 
 	
 	wire [`CSR_ADDR_WIDTH] csr_waddr_r; 
-	gnrl_dff #(12) csr_waddr_dff(clk, rst, hold, `mdisable, csr_waddr, csr_waddr_r); 
+	gnrl_dff #(12) csr_waddr_dff(clk, rst, flush, `mdisable, csr_waddr, csr_waddr_r); 
 	assign csr_waddr_o = csr_waddr_r; 
 	
 	wire [`DATA_WIDTH] imm_r; 
-	gnrl_dff #(32) imm_dff(clk, rst, hold, `ZERO32, imm, imm_r); 
+	gnrl_dff #(32) imm_dff(clk, rst, flush, `ZERO32, imm, imm_r); 
 	assign imm_o = imm_r; 
 	
 	wire [`OP1_SEL] op1_sel_r; 
-	gnrl_dff #(2) op1_sel_dff(clk, rst, hold, `OP1_NONE, op1_sel, op1_sel_r); 
+	gnrl_dff #(2) op1_sel_dff(clk, rst, flush, `OP1_NONE, op1_sel, op1_sel_r); 
 	assign op1_sel_o = op1_sel_r; 
 	
 	wire [`OP2_SEL] op2_sel_r; 
-	gnrl_dff #(2) op2_sel_dff(clk, rst, hold, `OP2_NONE, op2_sel, op2_sel_r); 
+	gnrl_dff #(2) op2_sel_dff(clk, rst, flush, `OP2_NONE, op2_sel, op2_sel_r); 
 	assign op2_sel_o = op2_sel_r; 
 	
 	wire [`ALU_SEL] alu_sel_r; 
-	gnrl_dff #(4) alu_sel_dff(clk, rst, hold, `ALU_ADD, alu_sel, alu_sel_r); 
+	gnrl_dff #(4) alu_sel_dff(clk, rst, flush, `ALU_ADD, alu_sel, alu_sel_r); 
 	assign alu_sel_o = alu_sel_r; 
 	
 	wire [`BR_SEL] br_sel_r; 
-	gnrl_dff #(3) br_sel_dff(clk, rst, hold, `BR_DISABLE, br_sel, br_sel_r); 
+	gnrl_dff #(3) br_sel_dff(clk, rst, flush, `BR_DISABLE, br_sel, br_sel_r); 
 	assign br_sel_o = br_sel_r; 
 	
 	wire [`WB_SEL] wb_sel_r; 
-	gnrl_dff #(3) wb_sel_dff(clk, rst, hold, `WB_NONE, wb_sel, wb_sel_r); 
+	gnrl_dff #(3) wb_sel_dff(clk, rst, flush, `WB_NONE, wb_sel, wb_sel_r); 
 	assign wb_sel_o = wb_sel_r; 
 	
 	wire [`MEM_RW] mem_rw_r; 
-	gnrl_dff #(2) mem_rw_dff(clk, rst, hold, `MEM_DISABLE, mem_rw, mem_rw_r); 
+	gnrl_dff #(2) mem_rw_dff(clk, rst, flush, `MEM_DISABLE, mem_rw, mem_rw_r); 
 	assign mem_rw_o = mem_rw_r; 
 	
 	wire [`BYTE_SEL] byte_sel_r; 
-	gnrl_dff #(4) byte_sel_dff(clk, rst, hold, `SL_NONE, byte_sel, byte_sel_r); 
+	gnrl_dff #(4) byte_sel_dff(clk, rst, flush, `SL_NONE, byte_sel, byte_sel_r); 
 	assign byte_sel_o = byte_sel_r; 
 	
 	wire un_sign_r; 
-	gnrl_dff #(1) un_sign_dff(clk, rst, hold, `UNSIGNED, un_sign, un_sign_r); 
+	gnrl_dff #(1) un_sign_dff(clk, rst, flush, `UNSIGNED, un_sign, un_sign_r); 
 	assign un_sign_o = un_sign_r; 
 	
 	wire [`DATA_WIDTH] rs1_rdata_r; 
-	gnrl_dff #(32) rs1_rdata_dff(clk, rst, hold, `ZERO32, rs1_rdata, rs1_rdata_r); 
+	gnrl_dff #(32) rs1_rdata_dff(clk, rst, flush, `ZERO32, rs1_rdata, rs1_rdata_r); 
 	assign rs1_rdata_o = rs1_rdata_r; 
 	
 	wire [`DATA_WIDTH] rs2_rdata_r; 
-	gnrl_dff #(32) rs2_rdata_dff(clk, rst, hold, `ZERO32, rs2_rdata, rs2_rdata_r); 
+	gnrl_dff #(32) rs2_rdata_dff(clk, rst, flush, `ZERO32, rs2_rdata, rs2_rdata_r); 
 	assign rs2_rdata_o = rs2_rdata_r; 
 	
 	wire [`DATA_WIDTH] csr_rdata_r; 
-	gnrl_dff #(32) csr_rdata_dff(clk, rst, hold, `ZERO32, csr_rdata, csr_rdata_r); 
+	gnrl_dff #(32) csr_rdata_dff(clk, rst, flush, `ZERO32, csr_rdata, csr_rdata_r); 
 	assign csr_rdata_o = csr_rdata_r; 
 	
 endmodule

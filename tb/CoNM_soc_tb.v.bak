@@ -23,8 +23,16 @@ CoNM_soc_top soc(
 	);
 	
 	//read mem data
+	integer i; 
+	reg [7:0] inst_byte [0:(`MEM_NUM*4)-1]; 
 	initial begin
-		$readmemh("D:/Work/GraduationP/conm/tb/rv32ui-p-add.verilog", soc.imem.mem_unit); 
+		$readmemh("D:/Work/GraduationP/conm/tests/isa/rv32ui-p-xori.verilog", inst_byte); 
+		for (i = 0; i < `MEM_NUM; i = i+1) begin
+			soc.imem.mem_unit[i][00+7:00] = inst_byte[i*4+0]; 
+			soc.imem.mem_unit[i][08+7:08] = inst_byte[i*4+1]; 
+			soc.imem.mem_unit[i][16+7:16] = inst_byte[i*4+2]; 
+			soc.imem.mem_unit[i][24+7:24] = inst_byte[i*4+3]; 
+		end
 	end
 	
 	//general test benchmark
@@ -69,12 +77,6 @@ CoNM_soc_top soc(
 		#50000; 
 		$display("Ooops...time out..."); 
 		$finish; 
-	end
-	
-	//generate wave file
-	initial begin
-		$dumpfile("CoNM_soc_tb.vcd"); 
-		$dumpvars(0, CoNM_soc_tb); 
 	end
 	
 endmodule

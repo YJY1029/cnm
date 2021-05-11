@@ -3,7 +3,7 @@ module gnrl_dff #(
 )(
 	input clk, 
 	input rst, 
-	input hold, 
+	input flush, 
 	
 	input [DW-1:0] dis_val, 
 	input [DW-1:0] din, 
@@ -13,7 +13,7 @@ module gnrl_dff #(
 	reg [DW-1:0] qout_r; 
 	
 	always @ (posedge clk or negedge rst) begin
-		if (!rst | hold) begin 
+		if (!rst | flush) begin 
 			qout_r <= dis_val; 
 		end else begin
 			qout_r <= din; 

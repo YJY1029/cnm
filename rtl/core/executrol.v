@@ -40,7 +40,6 @@ module executrol(
 	output wire [`DATA_WIDTH] mem_wdata_o, 
 	
 	//to pc
-	output wire hold_o, 
 	output wire jump_o, 
 	output wire [`INST_ADDR_WIDTH] jump_addr_o
 	); 
@@ -144,7 +143,6 @@ module executrol(
 	assign br_ltu = (br_sel == `BR_LT) & (un_sign == `UNSIGNED); 
 	assign br_geu = (br_sel == `BR_GE) & (un_sign == `UNSIGNED); 
 	
-	assign hold_o = ~br_disable; 
 	assign jump_o = 
 		(br_uncon | 
 		(br_eq & (op1 == op2)) | 

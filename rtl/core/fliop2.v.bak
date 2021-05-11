@@ -65,11 +65,11 @@ module fliop2(
 	assign imm_o = imm_r; 
 	
 	wire [`OP1_SEL] op1_sel_r; 
-	gnrl_dff #(2) op1_sel_dff(clk, rst, hold, `ZERO_REG, op1_sel, op1_sel_r); 
+	gnrl_dff #(2) op1_sel_dff(clk, rst, hold, `OP1_NONE, op1_sel, op1_sel_r); 
 	assign op1_sel_o = op1_sel_r; 
 	
 	wire [`OP2_SEL] op2_sel_r; 
-	gnrl_dff #(2) op2_sel_dff(clk, rst, hold, `ZERO_REG, op2_sel, op2_sel_r); 
+	gnrl_dff #(2) op2_sel_dff(clk, rst, hold, `OP2_NONE, op2_sel, op2_sel_r); 
 	assign op2_sel_o = op2_sel_r; 
 	
 	wire [`ALU_SEL] alu_sel_r; 

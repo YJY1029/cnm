@@ -1,0 +1,9 @@
+passed: add(9310), addi(4490), and(9710), andi(3610), auipc(470), jal(590), or(9770), ori(3750), sb(2030), simple(340), sll(9870), srli(4650)
+slli(4470), slt(9190), slti(4390), sltiu(4390), sltu(9190), srai(4770), srli(4650), sub(9150), xori(3790)
+
+failed: beq2, bge2, bgeu2, blt, bltu, bne, 
+jalr2, 
+lb, lbu, lh, lhu, lw, 
+sh(?), sw
+
+tbd: fence.i, sra(510?), srl(510?), xor(450), lui(510)
