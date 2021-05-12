@@ -1,9 +1,5 @@
-passed: add(9310), addi(4490), and(9710), andi(3610), auipc(470), jal(590), or(9770), ori(3750), sb(2030), simple(340), sll(9870), srli(4650)
-slli(4470), slt(9190), slti(4390), sltiu(4390), sltu(9190), srai(4770), srli(4650), sub(9150), xori(3790)
+passed: add(9350), addi(4530), and(9750), andi(3650), auipc(690), jal(630), or(9810), ori, sb, simple, sll(9910), srli(4690), slli(4510), slt(9230), slti, sltiu(4430), sltu, srai(4810), srli, sub(9190), xori(3830), beq(6310), bge(7030), blt(6310), bne(6390), lb(4590), lbu(4590), lh(4830), lhu(4970), lw(5030), sh(9590), sw(9730), lui(750), srl(10170), sra(10290), xor(9790), bgeu(7530), bltu(6810), jalr(2050)
 
-failed: beq2, bge2, bgeu2, blt, bltu, bne, 
-jalr2, 
-lb, lbu, lh, lhu, lw, 
-sh(?), sw
+failed: none
 
-tbd: fence.i, sra(510?), srl(510?), xor(450), lui(510)
+tbd: fence.i, ecall, ebreak

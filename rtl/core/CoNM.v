@@ -35,7 +35,7 @@ module CoNM(
 		.rst(rst), 
 		
 		.inst(imem_pc_inst), 
-		.jump(extl_pc_jump), 
+		.jump(extl_jump), 
 		.jump_addr(extl_pc_jump_addr), 
 		
 		.pc_o(pc_f1_inst_addr), 
@@ -175,7 +175,7 @@ module CoNM(
 	
 	wire [`MEM_ADDR_WIDTH] extl_sb_mem_raddr; 
 	wire [`MEM_ADDR_WIDTH] extl_sb_mem_waddr; 
-	assign extl_sb_addr_o = //check this twice
+	assign extl_sb_addr_o = 
 		extl_sb_mem_re_o ? extl_sb_mem_raddr : 
 		extl_sb_mem_we_o ? extl_sb_mem_waddr : 
 		`ZERO32; 
@@ -210,7 +210,7 @@ module CoNM(
 		.mem_we_o(extl_sb_mem_we_o), 
 		.mem_waddr_o(extl_sb_mem_waddr), 
 		.mem_wdata_o(extl_sb_mem_wdata_o), 
-		.jump_o(extl_pc_jump), 
+		.jump_o(extl_jump), 
 		.jump_addr_o(extl_pc_jump_addr)
 	);
 	

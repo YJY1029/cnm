@@ -44,10 +44,10 @@ module executrol(
 	output wire [`INST_ADDR_WIDTH] jump_addr_o
 	); 
 	
-	wire op1_none;
+	wire op1_none; 
 	wire op1_rs1; 
 	wire op1_imm; 
-	wire [`DATA_WIDTH] op1;
+	wire [`DATA_WIDTH] op1; 
 	
 	wire op2_none; 
 	wire op2_rs2; 
@@ -89,7 +89,7 @@ module executrol(
 	wire sl_word; 
 	
 	//op1 selection
-	assign op1_none = (op1_sel == `OP1_NONE); 
+	assign op1_none = (op1_sel == `OP1_NONE); //not functioning
 	assign op1_rs1 = (op1_sel == `OP1_RS1); 
 	assign op1_imm = (op1_sel == `OP1_IMM); 
 	assign op1 = 
@@ -98,7 +98,7 @@ module executrol(
 		`ZERO32; 
 	
 	//op2 selection
-	assign op2_none = (op2_sel == `OP2_NONE); 
+	assign op2_none = (op2_sel == `OP2_NONE); //not functioning
 	assign op2_rs2 = (op2_sel == `OP2_RS2); 
 	assign op2_inst_addr = (op2_sel == `OP2_INST_ADDR); 
 	assign op2_imm = (op2_sel == `OP2_IMM); 
@@ -109,11 +109,11 @@ module executrol(
 		`ZERO32; 
 	
 	//ALU operation
-	assign alu_nop = (alu_sel == `ALU_NOP); 
+	assign alu_nop = (alu_sel == `ALU_NOP); //not functioning
 	assign alu_add = (alu_sel == `ALU_ADD); 
 	assign alu_sub = (alu_sel == `ALU_SUB); 
 	assign alu_sll = (alu_sel == `ALU_SLL); 
-	assign alu_slt = (alu_sel == `ALU_SLT) & (un_sign == `SIGNED);
+	assign alu_slt = (alu_sel == `ALU_SLT) & (un_sign == `SIGNED); 
 	assign alu_sltu = (alu_sel == `ALU_SLT) & (un_sign == `UNSIGNED); 
 	assign alu_xor = (alu_sel == `ALU_XOR); 
 	assign alu_srl = (alu_sel == `ALU_SRL); 
@@ -134,12 +134,12 @@ module executrol(
 		`ZERO32; 
 	
 	//branch selection
-	assign br_disable = (br_sel == `BR_DISABLE); 
+	assign br_disable = (br_sel == `BR_DISABLE); //not functioning
 	assign br_uncon = (br_sel == `BR_UNCON); 
 	assign br_eq = (br_sel == `BR_EQ); 
 	assign br_ne = (br_sel == `BR_NE); 
-	assign br_lt = (br_sel == `BR_LT); 
-	assign br_ge = (br_sel == `BR_GE); 
+	assign br_lt = (br_sel == `BR_LT) & (un_sign == `SIGNED); 
+	assign br_ge = (br_sel == `BR_GE) & (un_sign == `SIGNED); 
 	assign br_ltu = (br_sel == `BR_LT) & (un_sign == `UNSIGNED); 
 	assign br_geu = (br_sel == `BR_GE) & (un_sign == `UNSIGNED); 
 	
@@ -153,8 +153,8 @@ module executrol(
 		(br_geu & (op1 >= op2))) ? `JUMP : 
 		`UNJUMP; 
 	assign jump_addr_o = 
-		br_uncon ? ((inst_addr+imm)&32'b11111111111111111111111111111110) : 
-		(inst_addr+imm); //will jump_addr_o and jump_o cause timing problems? 
+		br_uncon ? (alu_rslt&32'hfffffffe) : 
+		(inst_addr+imm); 
 		
 	//write back selection
 	assign wb_rd = (wb_sel == `WB_RD); 
@@ -195,4 +195,4 @@ module executrol(
 		mem_we_o ? rs2_rdata : 
 		`ZERO32; 
 	
-endmodule
+endmodule 

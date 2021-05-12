@@ -13,7 +13,7 @@ module sb(
 	
 	output reg [`DATA_WIDTH] m0_rdata_o, 
 	
-	//master1 interface, pc exclusive
+	//master1 interface
 	input wire m1_un_sign, 
 	input wire [`BYTE_SEL] m1_byte_mask, 
 	input wire m1_re, 
@@ -39,7 +39,7 @@ module sb(
 		s_wdata_o = `ZERO32; 
 		
 		if (m0_re) begin
-			s_rw_o = 1'b0; 
+			s_rw_o = `READ_ENABLE; 
 			s_addr_o = m0_addr; 
 			m0_rdata_o = 
 				m0_byte_mask[3] ? s_rdata : 
@@ -52,7 +52,7 @@ module sb(
 			s_wdata_o = m0_wdata; 
 			
 		end else if (m1_re) begin 
-			s_rw_o = 1'b0; 
+			s_rw_o = `READ_ENABLE; 
 			s_addr_o = m1_addr; 
 			m1_rdata_o = 
 				m1_byte_mask[3] ? s_rdata : 
@@ -67,4 +67,5 @@ module sb(
 			
 		end
 	end
+	
 endmodule

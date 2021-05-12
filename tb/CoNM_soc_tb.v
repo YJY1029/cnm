@@ -1,3 +1,4 @@
+`define CASE "D:/Work/GraduationP/conm/tests/isa/rv32ui-p-addi.verilog"
 `include "../rtl/core/defines.v"
 `define REGS soc.u_CoNM.u_csregfile.regs
 
@@ -26,7 +27,7 @@ CoNM_soc_top soc(
 	integer i; 
 	reg [7:0] inst_byte [0:(`MEM_NUM*4)-1]; 
 	initial begin
-		$readmemh("D:/Work/GraduationP/conm/tests/isa/rv32ui-p-beq.verilog", inst_byte); 
+		$readmemh(`CASE, inst_byte); 
 		for (i = 0; i < `MEM_NUM; i = i+1) begin
 			soc.imem.mem_unit[i][00+7:00] = inst_byte[i*4+0]; 
 			soc.imem.mem_unit[i][08+7:08] = inst_byte[i*4+1]; 
@@ -55,6 +56,7 @@ CoNM_soc_top soc(
 			$display("~~~~~~~~~ #       #    #  #    #  #    #~~~~~~~~~"); 
 			$display("~~~~~~~~~ #       #    #   ####    #### ~~~~~~~~~"); 
 			$display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"); 
+			$display(`CASE); 
 		end else begin 
 			$display("~~~~~~~~~~~~~~~~~~~ TEST_FAIL ~~~~~~~~~~~~~~~~~~~~"); 
 			$display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"); 
@@ -66,6 +68,7 @@ CoNM_soc_top soc(
 			$display("~~~~~~~~~~#       #    #     #    ######~~~~~~~~~~"); 
 			$display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"); 
 			$display("fail testnum = %2d", x3); 
+			$display(`CASE); 
 			for (r = 0; r < 32; r = r + 1) 
 				$display("x%2d = 0x%x", r, `REGS[r]); 
 			end
@@ -74,7 +77,7 @@ CoNM_soc_top soc(
 	
 	//timeout
 	initial begin
-		#50000; 
+		#10000; 
 		$display("Ooops...time out..."); 
 		$finish; 
 	end

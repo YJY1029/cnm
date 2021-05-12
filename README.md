@@ -1,9 +1,7 @@
 
 # Core of Normal Microarchitecture
-## Update Log - 5/8
-试了很久很久很久，最终放弃了所有现成的成体系的方法（因为缺少特权架构，且现有问题使得现成的压力测试无法解决细致问题），目前开始一条一条慢慢测试，计划两天内完成吧
-
-流水线冲刷有很大很大的问题；后期考虑补完特权架构
+## Update Log - 5/12
+Core verification finished, preparing to port it to FPGA. 
 
 This project is an RV32I core of normal, simple and classical microarchitecture. 
 This first version of design is very simple, focusing on simplicity and readability rather than performance, as it only has a three-stage pipeline, which is divided into instruction fetch, instruction decoding and execution. 

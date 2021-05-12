@@ -2,7 +2,7 @@
 
 module id(
 	//global
-	input wire rst,
+	input wire rst, 
 	 
 	//from fliop1
 	input wire [`INST_WIDTH] inst, 
@@ -28,21 +28,11 @@ module id(
 	output wire [`BYTE_SEL] byte_sel_o, 
 	output wire un_sign_o 
 	);
-	/*
-	op1sel 3: rs1, imm, none
-	op2sel 4: rs2, inst_addr, imm, none
-	alusel 9: add, sub, and, or, xor, logical shift left, logical shift right, arithmetic shift right, nop
-	br_type 8: uncon, eq, ne, lt, ge, ltu, geu, disable
-	mem_rw 3: read, write, disable
-	wb_sel 6: rd, j_type, il_type, mem, csr, none
-	byte_sel 4: byte, halfword, word, none
-	un_sign 2: unsigned, signed
-	*/
 	
 	//Instruction breakup
 	wire [6:0] opcode = inst[6:0]; 
-	wire [`REG_ADDR_WIDTH] rd = inst[11:7];
-	wire [2:0] funct3 = inst[14:12];
+	wire [`REG_ADDR_WIDTH] rd = inst[11:7]; 
+	wire [2:0] funct3 = inst[14:12]; 
 	wire [`REG_ADDR_WIDTH] rs1 = inst[19:15]; 
 	wire [`REG_ADDR_WIDTH] rs2 = inst[24:20]; 
 	wire [6:0] funct7 = inst[31:25]; 
@@ -111,11 +101,11 @@ module id(
 	wire fencei = fence_fencei & (funct3 == `FENCEI); 
 	
 	//CSR
-	wire csrrw = csr & (funct3 == `CSRRW);
-	wire csrrs = csr & (funct3 == `CSRRS);
-	wire csrrc = csr & (funct3 == `CSRRC);
-	wire csrrwi = csr & (funct3 == `CSRRWI);
-	wire csrrsi = csr & (funct3 == `CSRRSI);
+	wire csrrw = csr & (funct3 == `CSRRW); 
+	wire csrrs = csr & (funct3 == `CSRRS); 
+	wire csrrc = csr & (funct3 == `CSRRC); 
+	wire csrrwi = csr & (funct3 == `CSRRWI); 
+	wire csrrsi = csr & (funct3 == `CSRRSI); 
 	wire csrrci = csr & (funct3 == `CSRRCI); 
 	
 	//Environment
@@ -123,9 +113,9 @@ module id(
 	wire ebreak = (inst == `EBREAK); 
 	
 	//to csregfile
-	assign rs1_raddr_o = rs1;
+	assign rs1_raddr_o = rs1; 
 		
-	assign rs2_raddr_o = rs2;
+	assign rs2_raddr_o = rs2; 
 		
 	assign csr_raddr_o = inst[31:20]; 
 		
@@ -134,10 +124,7 @@ module id(
 	
 	assign inst_addr_o = inst_addr; 
 	
-	assign rd_waddr_o = 
-		(lui | auipc | jal | jalr | il_format | i_format | r_format | csr) ? rd : //should this be omitted also? 
-		
-		`ZERO_REG; 
+	assign rd_waddr_o = rd; 
 		
 	assign csr_waddr_o = inst[31:20]; 
 	
@@ -148,9 +135,19 @@ module id(
 		(b_format) ? {{20{inst[31]}}, inst[7], inst[30:25], inst[11:8], 1'b0} : 
 		(i_format | il_format) ? {{20{inst[31]}}, inst[31:20]} : 
 		s_format ? {{20{inst[31]}}, inst[31:25], inst[11:7]} : 
-		//csr ? 
-		`ZERO32; 
 		//priviledged part from here on not finished
+		`ZERO32; 
+		
+	assign op1_sel_o = 
+		(jalr | b_format | il_format | s_format | i_format | r_format | fence_fencei | csrrw | csrrs | csrrc) ? `OP1_RS1 : 
+		(lui | auipc | jal | csrrwi | csrrsi | csrrci) ? `OP1_IMM : 
+		`OP1_NONE; 
+	
+	assign op2_sel_o = 
+		(b_format | r_format) ? `OP2_RS2 : 
+		(jal | auipc) ? `OP2_INST_ADDR : 
+		(il_format | s_format | i_format | jalr) ? `OP2_IMM : 
+		`OP2_NONE; 
 		
 	assign alu_sel_o = 
 		(lui | auipc | jal | jalr | il_format | s_format | addi | add) ? `ALU_ADD : 
@@ -163,22 +160,6 @@ module id(
 		(ori | orr) ? `ALU_OR : 
 		(andi | andd) ? `ALU_AND : 
 		`ALU_NOP; 
-		
-	assign op1_sel_o = 
-		(jalr | b_format | il_format | s_format | i_format | r_format | fence_fencei | csrrw | csrrs | csrrc) ? `OP1_RS1 : 
-		(lui | auipc | jal | csrrwi | csrrsi | csrrci) ? `OP1_IMM : 
-		`OP1_NONE; 
-	
-	assign op2_sel_o = 
-		(b_format | r_format) ? `OP2_RS2 : 
-		(auipc | jal | jalr) ? `OP2_INST_ADDR : 
-		(il_format | s_format | i_format) ? `OP2_IMM : 
-		`OP2_NONE; 
-	
-	assign mem_rw_o = 
-		il_format ? `MEM_READ : 
-		s_format ? `MEM_WRITE : 
-		`MEM_DISABLE; 
 	
 	assign br_sel_o = 
 		(jal | jalr) ? `BR_UNCON : 
@@ -195,6 +176,11 @@ module id(
 		s_format ? `WB_MEM : 
 		csr ? `WB_CSR : 
 		`WB_NONE; 
+	
+	assign mem_rw_o = 
+		il_format ? `MEM_READ : 
+		s_format ? `MEM_WRITE : 
+		`MEM_DISABLE; 
 	
 	assign byte_sel_o = 
 		(lb | lbu | sb) ? `SL_BYTE : 

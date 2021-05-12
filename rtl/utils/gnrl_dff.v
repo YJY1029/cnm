@@ -15,11 +15,11 @@ module gnrl_dff #(
 	always @ (posedge clk or negedge rst) begin
 		if (!rst | flush) begin 
 			qout_r <= dis_val; 
-		end else begin
+		end else begin 
 			qout_r <= din; 
-		end
-	end
+		end 
+	end 
 	
 	assign qout = qout_r; 
 	
-endmodule
+endmodule 

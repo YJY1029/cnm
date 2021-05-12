@@ -24,4 +24,5 @@ module pc(
 			pc_o = pc_o+32'h4; 
 		end
 	end
+	
 endmodule

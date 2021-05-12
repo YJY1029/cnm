@@ -16,13 +16,13 @@ module fliop2(
 	input wire [`ALU_SEL] alu_sel, 
 	input wire [`BR_SEL] br_sel, 
 	input wire [`WB_SEL] wb_sel, 
-	input wire [`MEM_RW] mem_rw,
+	input wire [`MEM_RW] mem_rw, 
 	input wire [`BYTE_SEL] byte_sel, 
 	input wire un_sign, 
 	
 	//from csregfile
 	input wire [`DATA_WIDTH] rs1_rdata, 
-	input wire [`DATA_WIDTH] rs2_rdata,
+	input wire [`DATA_WIDTH] rs2_rdata, 
 	input wire [`DATA_WIDTH] csr_rdata, 
 	
 	//to executrol
@@ -41,7 +41,7 @@ module fliop2(
 	output wire un_sign_o, 
 	output wire [`DATA_WIDTH] rs1_rdata_o, 
 	output wire [`DATA_WIDTH] rs2_rdata_o,
-	output wire [`DATA_WIDTH] csr_rdata_o
+	output wire [`DATA_WIDTH] csr_rdata_o 
 	); 
 	
 	wire [`INST_WIDTH] inst_r; 

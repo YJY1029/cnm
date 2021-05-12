@@ -1,6 +1,5 @@
 `include "../rtl/core/defines.v"
 
-//All testbenches are based on addi x31, x1, 12'b101010101010
 module pc_tb(); 
 
 	//Clock signal

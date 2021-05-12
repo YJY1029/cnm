@@ -1,10 +1,4 @@
 `include "defines.v"
-/*
-It's really hard to express registers in fully combinational logical circuits. 
-Once again, some registers might be useless while others might be needed. 
-Not sure if csr_addr should be 32-bit long. 
-How on earth should I express a hard-wired x0???
-*/
 
 module csregfile(
 	input wire clk, 
@@ -33,25 +27,25 @@ module csregfile(
 	
 	//regfile to executrol
 	output reg [`DATA_WIDTH] rs1_rdata_o, 
-	output reg [`DATA_WIDTH] rs2_rdata_o
+	output reg [`DATA_WIDTH] rs2_rdata_o 
 );
 	
-	reg [`DATA_WIDTH] regs[0:`REG_NUM-1];
+	reg [`DATA_WIDTH] regs[0:`REG_NUM-1]; 
 	
-	reg [1+2*`DATA_WIDTH] cycle; //might be wrong
+	reg [1+2*`DATA_WIDTH] cycle; 
 	
 	//some might be useless while others might be needed
-	reg [`DATA_WIDTH] mstatus; 
-	reg [`DATA_WIDTH] misa; 
-	reg [`DATA_WIDTH] mtvec; 
-	reg [`DATA_WIDTH] mscratch; 
-	reg [`DATA_WIDTH] mepc; 
-	//reg [`DATA_WIDTH] mcause; 
-	//reg [`DATA_WIDTH] mtval; 
-	//reg [`DATA_WIDTH] mip; 
-	reg [`DATA_WIDTH] mcycle; 
-	reg [`DATA_WIDTH] mcycleh; 
-	reg [`DATA_WIDTH] mvendorid; 
+	reg [`DATA_WIDTH] mstatus;   //*very complex
+	reg [`DATA_WIDTH] misa;      //ISA indicator
+	reg [`DATA_WIDTH] mtvec;     //trap address
+	reg [`DATA_WIDTH] mscratch;  //temporary register data saving before exception
+	reg [`DATA_WIDTH] mepc;      //the pc address before exception
+	//reg [`DATA_WIDTH] mcause;  //exception cause indicator
+	//reg [`DATA_WIDTH] mtval;   //opcode or memory address before exception
+	//reg [`DATA_WIDTH] mip;     //pending related?
+	reg [`DATA_WIDTH] mcycle;    //counting cycle times, lower 32 bits
+	reg [`DATA_WIDTH] mcycleh;   //counting cycle times, higher 32 bits
+	reg [`DATA_WIDTH] mvendorid; //vendor id indicator
 	
 	//read
 	always @ (*) begin 
@@ -69,74 +63,74 @@ module csregfile(
 			rs2_rdata_o = `ZERO32; 
 		end else if (rs2_raddr == rd_waddr) begin 
 			rs2_rdata_o = (extl_rd_wdata|sb_rd_wdata); 
-		end else begin
-			rs2_rdata_o = regs[rs2_raddr];
-		end
+		end else begin 
+			rs2_rdata_o = regs[rs2_raddr]; 
+		end 
 		
 		//reading csr
 		if ((csr_waddr == csr_raddr) && (csr_raddr != `mdisable)) begin
 			csr_rdata_o = csr_wdata; 
-		end else begin
+		end else begin 
 			case (csr_raddr) 
-				`mstatus: begin
+				`mstatus: begin 
 					csr_rdata_o = mstatus; 
-				end
-				`misa: begin
+				end 
+				`misa: begin 
 					csr_rdata_o = misa; 
-				end
-				`mtvec: begin
+				end 
+				`mtvec: begin 
 					csr_rdata_o = mtvec; 
-				end
-				`mscratch: begin
+				end 
+				`mscratch: begin 
 					csr_rdata_o = mscratch; 
-				end
-				`mepc: begin
+				end 
+				`mepc: begin 
 					csr_rdata_o = mepc; 
-				end
+				end 
 				/*
-				`mcause: begin
+				`mcause: begin 
 					csr_rdata_o = mcause; 
-				end
-				`mtval: begin
+				end 
+				`mtval: begin 
 					csr_rdata_o = mtval; 
-				end
-				`mip: begin
+				end 
+				`mip: begin 
 					csr_rdata_o = mip; 
-				end
+				end 
 				*/
-				`mcycle: begin
+				`mcycle: begin 
 					csr_rdata_o = cycle[31:0]; 
-				end
-				`mcycleh: begin
+				end 
+				`mcycleh: begin 
 					csr_rdata_o = cycle[63:32]; 
-				end
-				`mvendorid: begin
+				end 
+				`mvendorid: begin 
 					csr_rdata_o = mvendorid; 
-				end
-				default: begin
+				end 
+				default: begin 
 				  csr_rdata_o = `ZERO32; 
-				end
-			endcase
+				end 
+			endcase 
 		end	
 		
-	end
+	end 
 	
-	//write, on positive edges of clk
-	always @ (posedge clk) begin
+	//write, on clk posedge
+	always @ (posedge clk) begin 
 		if (rst == `RST) begin //initialization
 			cycle <= {`ZERO32, `ZERO32}; 
 			mstatus <= `ZERO32; 
 			misa <= 32'h40020000; //Meaning RV32I
-			mtvec <= `ZERO32; //trap address, revision needed
-			mscratch <= `ZERO32; //exception related
-			mepc <= `ZERO32; //ditto
-			//mcause <= `ZERO32; //ditto
-			//mtval <= `ZERO32; //ditto
-			//mip <= `ZERO32; //pending related
+			mtvec <= `ZERO32; 
+			mscratch <= `ZERO32; 
+			mepc <= `ZERO32; 
+			//mcause <= `ZERO32; 
+			//mtval <= `ZERO32; 
+			//mip <= `ZERO32; 
 			mcycle <= `ZERO32; 
 			mcycleh <= `ZERO32; 
 			mvendorid <= 32'h13109f5; //Awesome you found an easter egg! In decimal form it's my birthday :-)
-		end else begin
+		end else begin 
 			cycle <= cycle+1'b1; 
 			
 			//writing rd
@@ -144,46 +138,48 @@ module csregfile(
 				regs[rd_waddr] <= (extl_rd_wdata|sb_rd_wdata); 
 				
 			end else if (csr_waddr != `mdisable) begin
-				case (csr_waddr)
-					`mstatus: begin
+				case (csr_waddr) 
+					`mstatus: begin 
 						mstatus <= csr_wdata; 
-					end
-					`misa: begin
+					end 
+					`misa: begin 
 						misa <= csr_wdata; 
-					end
-					`mtvec: begin
+					end 
+					`mtvec: begin 
 						mtvec <= csr_wdata; 
-					end
-					`mscratch: begin
+					end 
+					`mscratch: begin 
 						mscratch <= csr_wdata; 
-					end
-					`mepc: begin
+					end 
+					`mepc: begin 
 						mepc <= csr_wdata; 
-					end
+					end 
 					/*
-					`mcause: begin
+					`mcause: begin 
 						mcause <= csr_wdata; 
-					end
-					`mtval: begin
+					end 
+					`mtval: begin 
 						mtval <= csr_wdata; 
-					end
-					`mip: begin
+					end 
+					`mip: begin 
 						mip <= csr_wdata; 
-					end
+					end 
 					*/
-					`mcycle: begin
+					`mcycle: begin 
 						cycle[31:0] <= csr_wdata; 
-					end
-					`mcycleh: begin
+					end 
+					`mcycleh: begin 
 						cycle[63:32] <= csr_wdata; 
-					end
+					end 
 					//mvendorid is readonly
-					default: begin
+					default: begin 
 						
-					end
-				endcase
-			end
-		end
-	end
+					end 
+				endcase 
+			end 
+			
+		end 
+	
+	end 
 	
 endmodule

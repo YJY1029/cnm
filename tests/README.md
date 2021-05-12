@@ -1,0 +1,2 @@
+# Tests
+ These are single-instruction pressure tests come from an official RISC-V repository [riscv-tests/isa](https://github.com/riscv/riscv-tests/tree/master/isa). The *test.log* file records part of the test results using *CoNM_soc_tb* under Modelsim 10.4, and in brackets shows the running time in ns. 

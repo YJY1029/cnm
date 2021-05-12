@@ -2,7 +2,7 @@
 
 module CoNM_soc_top(
 	input wire clk, 
-	input wire rst
+	input wire rst 
 	);
 	
 	//pc and imem
