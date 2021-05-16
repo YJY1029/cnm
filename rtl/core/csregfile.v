@@ -27,7 +27,10 @@ module csregfile(
 	
 	//regfile to executrol
 	output reg [`DATA_WIDTH] rs1_rdata_o, 
-	output reg [`DATA_WIDTH] rs2_rdata_o 
+	output reg [`DATA_WIDTH] rs2_rdata_o, 
+	
+	output wire stop, 
+	output wire succ 
 );
 	
 	reg [`DATA_WIDTH] regs[0:`REG_NUM-1]; 
@@ -181,5 +184,12 @@ module csregfile(
 		end 
 	
 	end 
+
+	assign stop = 
+		(rst == `RST) ? 1'b1 : 
+		~regs[26]; 
+	assign succ = 
+		(rst == `RST) ? 1'b1 : 
+		~regs[27]; 
 	
 endmodule

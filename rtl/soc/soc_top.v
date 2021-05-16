@@ -3,12 +3,14 @@
 module soc_top(
 	input wire clk, 
 	input wire rst, 
-	input wire [`INST_WIDTH] inst, 
-	output wire [`INST_ADDR_WIDTH] inst_addr_o
+	
+	output wire stop, 
+	output wire succ 
 	);
 	
-	//pc
-	wire [`INST_ADDR_WIDTH] pc_imem_inst_addr; 
+	//imem and pc
+	wire [`INST_ADDR_WIDTH] pc_imem_inst_addr_r; 
+	wire [`MEM_ADDR_WIDTH] pc_imem_inst_addr = {2'b0, pc_imem_inst_addr_r[31:2]}; 
 	wire [`INST_WIDTH] imem_pc_inst; 
 	
 	//extl and sb
@@ -33,25 +35,33 @@ module soc_top(
 	
 	//dmem and sb
 	wire [`DATA_WIDTH] dmem_sb_rdata; 
-	wire sb_dmem_rw; 
+	wire [3:0] sb_dmem_rw; 
 	wire [`MEM_ADDR_WIDTH] sb_dmem_addr; 
 	wire [`DATA_WIDTH] sb_dmem_wdata; 
+	
+imem imem(
+  .clka(clk), // input clka
+  .addra(pc_imem_inst_addr), // input [31 : 0] addra
+  .douta(imem_pc_inst) // output [31 : 0] douta
+);
 	
 CoNM u_CoNM(
 	.clk(clk), 
 	.rst(rst), 
 	
-	.imem_pc_inst(inst), 
+	.imem_pc_inst(imem_pc_inst), 
 	.sb_csrgf_rdata(sb_csrgf_rdata), 
 	
-	.pc_imem_inst_addr(inst_addr_o), 
+	.pc_imem_inst_addr(pc_imem_inst_addr_r), 
 	
 	.extl_sb_un_sign_o(extl_sb_un_sign), 
 	.extl_sb_byte_mask_o(extl_sb_byte_mask), 
 	.extl_sb_mem_re_o(extl_sb_mem_re), 
 	.extl_sb_mem_we_o(extl_sb_mem_we), 
 	.extl_sb_addr_o(extl_sb_addr), 
-	.extl_sb_mem_wdata_o(extl_sb_mem_wdata)
+	.extl_sb_mem_wdata_o(extl_sb_mem_wdata), 
+	.stop(stop), 
+	.succ(succ)
 	);
 	
 sb u_sb(
@@ -80,15 +90,13 @@ sb u_sb(
 	.s_wdata_o(sb_dmem_wdata)
 	); 
 	
-mem dmem(
-	.clk(clk), 
-	.rst(rst), 
-	
-	.rw(sb_dmem_rw), 
-	.addr(sb_dmem_addr), 
-	.wdata(sb_dmem_wdata), 
-	
-	.rdata_o(dmem_sb_rdata)
-	);
+dmem dmem (
+  .clka(clk),    // input wire clka
+  
+  .wea(sb_dmem_rw),      // input wire [3 : 0] wea
+  .addra(sb_dmem_addr),  // input wire [31 : 0] addra
+  .dina(sb_dmem_wdata),    // input wire [31 : 0] dina
+  .douta(dmem_sb_rdata)  // output wire [31 : 0] douta
+);
 	
 endmodule

@@ -26,7 +26,7 @@ module sb(
 	//slave interface, mem exclusive
 	input wire [`DATA_WIDTH] s_rdata, 
 	
-	output reg s_rw_o, 
+	output reg [3:0] s_rw_o, 
 	output reg [`MEM_ADDR_WIDTH] s_addr_o, 
 	output reg [`DATA_WIDTH] s_wdata_o 
 	); 
@@ -34,12 +34,12 @@ module sb(
 	always @ (*) begin
 		m0_rdata_o = `ZERO32; 
 		m1_rdata_o = `ZERO32; 
-		s_rw_o = `READ_ENABLE; 
+		s_rw_o = 4'b0; 
 		s_addr_o = `ZERO32; 
 		s_wdata_o = `ZERO32; 
 		
 		if (m0_re) begin
-			s_rw_o = `READ_ENABLE; 
+			s_rw_o = 4'b0; 
 			s_addr_o = m0_addr; 
 			m0_rdata_o = 
 				m0_byte_mask[3] ? s_rdata : 
@@ -47,12 +47,12 @@ module sb(
 				m0_byte_mask[0] ? {{24{m0_un_sign&s_rdata[15]}}, {8{1'b1}}} & s_rdata : 
 				`ZERO32; 
 		end else if (m0_we) begin 
-			s_rw_o = `WRITE_ENABLE; 
+			s_rw_o = 4'hf; 
 			s_addr_o = m0_addr; 
 			s_wdata_o = m0_wdata; 
 			
 		end else if (m1_re) begin 
-			s_rw_o = `READ_ENABLE; 
+			s_rw_o = 4'b0; 
 			s_addr_o = m1_addr; 
 			m1_rdata_o = 
 				m1_byte_mask[3] ? s_rdata : 
@@ -60,7 +60,7 @@ module sb(
 				m1_byte_mask[0] ? {{24{m1_un_sign&s_rdata[15]}}, {8{1'b1}}} & s_rdata : 
 				`ZERO32; 
 		end else if (m0_we) begin
-			s_rw_o = `WRITE_ENABLE; 
+			s_rw_o = 4'hf; 
 			s_addr_o = m0_addr; 
 			s_wdata_o = m0_wdata; 
 		end else begin

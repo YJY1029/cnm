@@ -20,7 +20,7 @@ module mem(
 	
 	always @ (*) begin 
 		if (rst == `RST) begin 
-			rdata_o = 32'h0; 
+			rdata_o = `ZERO32; 
 		end else begin 
 			rdata_o = mem_unit[addr[31:2]]; 
 		end 

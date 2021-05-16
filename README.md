@@ -1,7 +1,7 @@
 
 # Core of Normal Microarchitecture
-## Update Log - 5/12
-Core verification finished, preparing to port it to FPGA. 
+## Update Log - 5/16
+Added some trash(ports *stop* and *succ* in soc_top, CoNM and csregfile, due to the hellish synthesis strategy of older version ISE; when uart and other protocols are finished, do remember to delete them. 
 
 This project is an RV32I core of normal, simple and classical microarchitecture. 
 This first version of design is very simple, focusing on simplicity and readability rather than performance, as it only has a three-stage pipeline, which is divided into instruction fetch, instruction decoding and execution. 
