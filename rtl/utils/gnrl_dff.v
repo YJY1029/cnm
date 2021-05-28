@@ -12,7 +12,7 @@ module gnrl_dff #(
 	
 	reg [DW-1:0] qout_r; 
 	
-	always @ (posedge clk or negedge rst) begin
+	always @ (posedge clk) begin
 		if (!rst | flush) begin 
 			qout_r <= dis_val; 
 		end else begin 

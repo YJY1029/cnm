@@ -42,27 +42,53 @@ module sb(
 			s_rw_o = 4'b0; 
 			s_addr_o = m0_addr; 
 			m0_rdata_o = 
-				m0_byte_mask[3] ? s_rdata : 
-				m0_byte_mask[1] ? {{16{m0_un_sign&s_rdata[15]}}, {16{1'b1}}} & s_rdata : 
-				m0_byte_mask[0] ? {{24{m0_un_sign&s_rdata[15]}}, {8{1'b1}}} & s_rdata : 
+				m0_byte_mask[3] ? {s_rdata[7:0], s_rdata[15:8], s_rdata[23:16], s_rdata[31:24]} : 
+				m0_byte_mask[1] ? {{16{m0_un_sign&s_rdata[23]}}, s_rdata[23:16], s_rdata[31:24]} : 
+				m0_byte_mask[0] ? {{24{m0_un_sign&s_rdata[31]}}, s_rdata[31:24]} : 
 				`ZERO32; 
 		end else if (m0_we) begin 
-			s_rw_o = 4'hf; 
+			s_rw_o = {m0_byte_mask[0], m0_byte_mask[1], m0_byte_mask[2], m0_byte_mask[3]}; 
 			s_addr_o = m0_addr; 
-			s_wdata_o = m0_wdata; 
-			
+			s_wdata_o = 
+				m0_byte_mask[3] ? {m0_wdata[7:0], m0_wdata[15:8], m0_wdata[23:16], m0_wdata[31:24]} : 
+				m0_byte_mask[1] ? {m0_wdata[7:0], m0_wdata[15:8], {16{1'b0}}} : 
+				m0_byte_mask[0] ? {m0_wdata[7:0], {24{1'b0}}} : 
+				`ZERO32; 
+		/*
+		if (m0_re) begin
+			s_rw_o = 4'b0; 
+			s_addr_o = m0_addr; 
+			m0_rdata_o = 
+				m0_byte_mask[3] ? s_rdata : 
+				m0_byte_mask[1] ? {{16{m0_un_sign&s_rdata[31]}}, s_rdata[31:16]} : 
+				m0_byte_mask[0] ? {{24{m0_un_sign&s_rdata[31]}}, s_rdata[31:24]} : 
+				`ZERO32; 
+		end else if (m0_we) begin 
+			s_rw_o = {m0_byte_mask[0], m0_byte_mask[1], m0_byte_mask[2], m0_byte_mask[3]}; 
+			s_addr_o = m0_addr; 
+			s_wdata_o = 
+				m0_byte_mask[3] ? m0_wdata : 
+				m0_byte_mask[1] ? {m0_wdata[15:0], {16{1'b0}}} : 
+				m0_byte_mask[0] ? {m0_wdata[7:0], {24{1'b0}}} : 
+				`ZERO32; 
+		*/
 		end else if (m1_re) begin 
 			s_rw_o = 4'b0; 
 			s_addr_o = m1_addr; 
 			m1_rdata_o = 
-				m1_byte_mask[3] ? s_rdata : 
-				m1_byte_mask[1] ? {{16{m1_un_sign&s_rdata[15]}}, {16{1'b1}}} & s_rdata : 
-				m1_byte_mask[0] ? {{24{m1_un_sign&s_rdata[15]}}, {8{1'b1}}} & s_rdata : 
+				m1_byte_mask[3] ? {s_rdata[7:0], s_rdata[15:8], s_rdata[23:16], s_rdata[31:24]} : 
+				m1_byte_mask[1] ? {{16{m1_un_sign&s_rdata[23]}}, s_rdata[23:16], s_rdata[31:24]} : 
+				m1_byte_mask[0] ? {{24{m1_un_sign&s_rdata[31]}}, s_rdata[31:24]} : 
 				`ZERO32; 
-		end else if (m0_we) begin
-			s_rw_o = 4'hf; 
-			s_addr_o = m0_addr; 
-			s_wdata_o = m0_wdata; 
+		end else if (m1_we) begin 
+			s_rw_o = {m1_byte_mask[0], m1_byte_mask[1], m1_byte_mask[2], m1_byte_mask[3]}; 
+			s_addr_o = m1_addr; 
+			s_wdata_o = 
+				m1_byte_mask[3] ? {m1_wdata[7:0], m1_wdata[15:8], m1_wdata[23:16], m1_wdata[31:24]} : 
+				m1_byte_mask[1] ? {m1_wdata[7:0], m1_wdata[15:8], {16{1'b0}}} : 
+				m1_byte_mask[0] ? {m1_wdata[7:0], {24{1'b0}}} : 
+				`ZERO32; 
+			
 		end else begin
 			
 		end

@@ -35,7 +35,7 @@ module CoNM_soc_top(
 	wire [`MEM_ADDR_WIDTH] sb_dmem_addr; 
 	wire [`DATA_WIDTH] sb_dmem_wdata; 
 	
-mem imem(
+imem imem(
 	.clk(clk), 
 	.rst(rst), 
 	
@@ -89,7 +89,7 @@ sb u_sb(
 	.s_wdata_o(sb_dmem_wdata)
 	); 
 	
-mem dmem(
+dmem dmem(
 	.clk(clk), 
 	.rst(rst), 
 	

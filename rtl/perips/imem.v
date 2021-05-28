@@ -1,6 +1,6 @@
 `include "../core/defines.v"
 
-module mem(
+module imem(
 	input wire clk, 
 	input wire rst, 
 	input wire rw, 

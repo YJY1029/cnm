@@ -80,6 +80,7 @@ module executrol(
 	wire wb_none; 
 	wire wb_rd; 
 	wire wb_j_type; 
+	wire wb_il_type; 
 	wire wb_mem; 
 	wire wb_csr; 
 	

@@ -53,7 +53,7 @@ Disassembly of section .text.init:
 
 00000084 <test_8>:
   84:	00000093          	li	ra,0
-  88:	7ff08f13          	addi	t5,ra,2047
+  88:	7ff08f13          	addi	t5,ra,2047 
   8c:	7ff00e93          	li	t4,2047
   90:	00800193          	li	gp,8
   94:	1fdf1e63          	bne	t5,t4,290 <fail>
@@ -149,7 +149,7 @@ Disassembly of section .text.init:
  1a4:	000f0313          	mv	t1,t5
  1a8:	00120213          	addi	tp,tp,1 # 1 <_start+0x1>
  1ac:	00200293          	li	t0,2
- 1b0:	fe5214e3          	bne	tp,t0,198 <test_19+0x4>
+ 1b0:	fe5214e3          	bne	tp,t0,198 <test_19+0x4> 
  1b4:	01700e93          	li	t4,23
  1b8:	01300193          	li	gp,19
  1bc:	0dd31a63          	bne	t1,t4,290 <fail>

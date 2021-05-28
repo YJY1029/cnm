@@ -15,10 +15,7 @@ module CoNM(
 	output wire extl_sb_mem_re_o, 
 	output wire extl_sb_mem_we_o, 
 	output wire [`MEM_ADDR_WIDTH] extl_sb_addr_o, 
-	output wire [`DATA_WIDTH] extl_sb_mem_wdata_o, 
-	
-	output wire stop, 
-	output wire succ
+	output wire [`DATA_WIDTH] extl_sb_mem_wdata_o
 	); 
 	
 	//these are executrol outputs
@@ -117,9 +114,7 @@ module CoNM(
 		
 		.csr_rdata_o(csrgf_f2_csr_rdata), 
 		.rs1_rdata_o(csrgf_f2_rs1_rdata), 
-		.rs2_rdata_o(csrgf_f2_rs2_rdata), 
-		.stop(stop), 
-		.succ(succ)
+		.rs2_rdata_o(csrgf_f2_rs2_rdata)
 	);
 	
 	wire [`INST_WIDTH] f2_extl_inst; 

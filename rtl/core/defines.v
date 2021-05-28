@@ -6,16 +6,14 @@
 `define UNRST             1'b1
 `define JUMP              1'b1
 `define UNJUMP            1'b0
-`define HOLD              1'b1
-`define UNHOLD            1'b0
 `define WRITE_ENABLE	    1'b1
 `define READ_ENABLE       1'b0
-                              
+
 //Instruction parameters
 `define INST_WIDTH		    31:0
 `define INST_ADDR_WIDTH   31:0
 `define INI_INST_ADDR    `ZERO32
-                             
+
 //General integer register
 `define REG_NUM					    32
 `define REG_ADDR_WIDTH     4:0

@@ -1,4 +1,4 @@
-`define CASE "D:/Work/GraduationP/conm/tests/isa/rv32ui-p-addi.verilog"
+`define CASE "D:/Work/GraduationP/conm/tests/isa/rv32ui-p-sra.verilog"
 `include "../rtl/core/defines.v"
 `define REGS soc.u_CoNM.u_csregfile.regs
 
@@ -77,7 +77,7 @@ CoNM_soc_top soc(
 	
 	//timeout
 	initial begin
-		#10000; 
+		#20000; 
 		$display("Ooops...time out..."); 
 		$finish; 
 	end
