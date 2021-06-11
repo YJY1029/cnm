@@ -38,16 +38,11 @@ module vvd_tb();
 		rst = `UNRST; 
 	end
 	
-	initial begin
-	$dumpfile("dump.vcd");  
-    $dumpvars(3); 
-    end
-	
 soc_top u_soc_top(
 	.sys_clk(sys_clk), 
 	.rst(rst), 
 	.stop(stop), 
-	.succ(succ)
+	.bug(bug)
 	); 
 	
 endmodule

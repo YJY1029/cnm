@@ -1,4 +1,4 @@
-`define CASE "D:/Work/GraduationP/conm/tests/isa/rv32ui-p-bltu.verilog"
+`define CASE "D:/Work/GraduationP/conm/tests/isa/rv32ui-p-sra.verilog"
 `include "../rtl/core/defines.v"
 `define REGS soc.u_CoNM.u_csregfile.regs
 
