@@ -1,4 +1,5 @@
 
+
 # Core of Normal Microarchitecture
 ## Update Log - 5/16
 Paperwork and picturework. A so-called manual added. 
@@ -14,6 +15,7 @@ When implementing this design, there are three main design ideas:
  3. *Extendable*. Enough space for classical optimization modules , e.g. dynamic branch predictor, and future extension is kept. 
 
 ## Modules
+![Datapath](https://github.com/YJY1029/conm/blob/main/datapath.png?raw=true)
 
 Basically our core contains: 
 1. ***defines***: Relevant parameters, configure, and necessary information of decoding. 
